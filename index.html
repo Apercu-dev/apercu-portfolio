@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta name="description" content="Aperçu — Portfolio de Mael Ballay Checconi. Design, peinture, mode et direction artistique depuis 2017.">
+<meta name="description" content="Aperçu — Portfolio of Mael Ballay Checconi. Graphic design, art direction, painting and fashion since 2017.">
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Aperçu — Portfolio</title>
@@ -40,8 +40,8 @@ nav {
 }
 .nav-links { display:flex; gap:2.5rem; }
 .nav-links a {
-  font-family:'DM Mono',monospace; font-size:.62rem; letter-spacing:.18em;
-  text-transform:uppercase; color:#444; text-decoration:none;
+  font-family:'DM Mono',monospace; font-size:.72rem; font-weight:500; letter-spacing:.15em;
+  text-transform:uppercase; color:#666; text-decoration:none;
   pointer-events:all; transition:color .2s; cursor:none;
 }
 .nav-links a:hover { color:#f0ece4; }
@@ -149,19 +149,16 @@ nav {
 .project-item:hover .project-type,
 .project-item:hover .project-year { color:#0a0a0a; }
 .project-item:hover .project-arrow { opacity:1; transform:translateX(0); color:#0a0a0a; }
-.project-number { font-family:'DM Mono',monospace; font-size:.65rem; color:#2a2a2a; width:3.5rem; flex-shrink:0; padding:1.4rem 0 1.4rem 1rem; position:relative; z-index:1; transition:color .3s; letter-spacing:.05em; }
+.project-number { font-family:'DM Mono',monospace; font-size:.72rem; font-weight:500; color:#3a3a3a; width:3.5rem; flex-shrink:0; padding:1.4rem 0 1.4rem 1rem; position:relative; z-index:1; transition:color .3s; letter-spacing:.05em; }
 .project-name-wrap { flex:1; padding:.6rem 0; position:relative; z-index:1; min-height:64px; display:flex; align-items:center; }
 .project-name-text { font-family:'Bebas Neue',sans-serif; font-size:clamp(1.8rem,4vw,3.2rem); letter-spacing:.06em; color:#f0ece4; position:relative; z-index:1; line-height:1.1; transition:opacity .05s; white-space:nowrap; user-select:none; }
 .project-item:hover .project-name-text { opacity:0; }
-.project-type { font-size:.62rem; color:#333; letter-spacing:.15em; text-transform:uppercase; width:10rem; flex-shrink:0; position:relative; z-index:1; transition:color .3s; text-align:right; padding-right:1rem; }
-.project-year { font-size:.62rem; color:#2a2a2a; letter-spacing:.1em; width:4rem; flex-shrink:0; position:relative; z-index:1; transition:color .3s; text-align:right; }
+.project-type { font-size:.7rem; font-weight:500; color:#888; letter-spacing:.12em; text-transform:uppercase; width:10rem; flex-shrink:0; position:relative; z-index:1; transition:color .3s; text-align:right; padding-right:1rem; }
+.project-year { font-size:.7rem; font-weight:500; color:#3a3a3a; letter-spacing:.08em; width:4rem; flex-shrink:0; position:relative; z-index:1; transition:color .3s; text-align:right; }
 .project-arrow { font-size:1rem; opacity:0; transform:translateX(-8px); transition:all .3s; position:relative; z-index:1; margin-left:1rem; color:#0a0a0a; }
 .new-tag { font-size:.55rem; letter-spacing:.12em; text-transform:uppercase; background:#f0ece4; color:#0a0a0a; padding:2px 6px; margin-left:.8rem; position:relative; z-index:1; flex-shrink:0; font-family:'DM Mono',monospace; align-self:center; }
 .project-item:hover .new-tag { background:#0a0a0a; color:#f0ece4; border:1px solid #0a0a0a; }
-.section-label { padding:1.8rem 2.5rem .5rem; font-size:.6rem; letter-spacing:.2em; text-transform:uppercase; color:#2a2a2a; border-bottom:1px solid #1a1a1a; position:relative; z-index:2; }
-.footer { padding:2rem 2.5rem; display:flex; justify-content:space-between; align-items:center; border-top:1px solid #1f1f1f; margin-top:1rem; position:relative; z-index:2; }
-.footer-text { font-size:.6rem; color:#2a2a2a; letter-spacing:.12em; text-transform:uppercase; }
-.footer-logo { font-family:'Orbitron',sans-serif; font-size:1rem; font-weight:700; color:#2a2a2a; letter-spacing:.1em; }
+.section-label { padding:1.8rem 2.5rem .5rem; font-size:.6rem; letter-spacing:.2em; text-transform:uppercase; color:#666; border-bottom:1px solid #1a1a1a; position:relative; z-index:2; }
 
 /* =====================
    TABLETTE (481 - 1024px)
@@ -188,8 +185,7 @@ nav {
   .projects-list { padding:0 2rem; }
   .filter-bar { padding:.7rem 2rem; }
   .section-label { padding:1.5rem 2rem .5rem; }
-  .footer { padding:1.5rem 2rem; }
-  .project-type { width:8rem; }
+    .project-type { width:8rem; }
   .project-name-text { font-size:clamp(1.5rem,3.5vw,2.5rem); }
 }
 
@@ -281,8 +277,7 @@ nav {
   .project-item:hover .project-name-text { opacity:1; }
 
   /* Footer */
-  .footer { padding:1.2rem; flex-direction:column; gap:.5rem; align-items:flex-start; }
-
+  
   /* Canvas titre projets */
   #title-canvas { display:none; }
   #proj-title { opacity:1 !important; color:#f0ece4 !important; }
@@ -304,6 +299,23 @@ nav {
   nav { padding:.8rem 1rem; }
   .nav-links { gap:.9rem; }
 }
+
+
+/* ── Site Footer B ─────────────────────────────────────────────── */
+.site-footer{background:var(--ink,#111);color:var(--cream,#f0ece4);padding:2rem 2.5rem 1.5rem;border-top:1px solid rgba(240,236,228,.06);}
+.sf-top{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:1.2rem;}
+.sf-name{font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(240,236,228,.55);}
+.sf-nav{display:flex;gap:2rem;}
+.sf-nav a{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(240,236,228,.3);text-decoration:none;transition:color .2s;}
+.sf-nav a:hover{color:rgba(240,236,228,.8);}
+.sf-sep{border:none;border-top:1px solid rgba(240,236,228,.06);margin:0 0 1rem;}
+.sf-copy{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(240,236,228,.18);}
+@media(max-width:600px){
+  .sf-top{flex-direction:column;gap:1.2rem;align-items:flex-start;}
+  .sf-nav{gap:1.2rem;flex-wrap:wrap;}
+  .site-footer{padding:1.5rem 1.2rem 1rem;}
+}
+/* ────────────────────────────────────────────────────────────────── */
 </style>
 </head>
 <body>
@@ -490,7 +502,7 @@ nav {
       <span class="project-number">05</span><span class="project-name-wrap"><span class="project-name-text">ADN</span></span>
       <span class="project-type">Fashion / Branding</span><span class="project-year">2023</span><span class="project-arrow">→</span>
     </a>
-    <a class="project-item" href="https://maelbally.wixsite.com/m-ballay-portfolio/hana" data-category="branding design" data-name="HANA">
+    <a class="project-item" href="hana-project-EN.html" data-category="branding design" data-name="HANA">
       <span class="project-number">06</span><span class="project-name-wrap"><span class="project-name-text">HANA</span></span>
       <span class="project-type">Branding</span><span class="project-year">2023</span><span class="project-arrow">→</span>
     </a>
@@ -530,16 +542,13 @@ nav {
       <span class="project-number">15</span><span class="project-name-wrap"><span class="project-name-text">Eliot Hemil</span></span>
       <span class="project-type">Branding</span><span class="project-year">2022</span><span class="project-arrow">→</span>
     </a>
-    <a class="project-item" href="https://maelbally.wixsite.com/m-ballay-portfolio/s-bouquin" data-category="branding" data-name="S. Bouquin">
+    <a class="project-item" href="sbouquin.html" data-category="branding" data-name="S. Bouquin">
       <span class="project-number">16</span><span class="project-name-wrap"><span class="project-name-text">S. Bouquin</span></span>
       <span class="project-type">Visual Identity</span><span class="project-year">2022</span><span class="project-arrow">→</span>
     </a>
   </div>
 
-  <div class="footer">
-    <div class="footer-text">Aperçu — Nantes, France</div>
-    <div class="footer-logo">APERÇU</div>
-  </div>
+        </div>
 </div>
 
 <script>
@@ -920,9 +929,19 @@ function fp(cat, e) {
 
 
 <script src="apercu-loader.js"></script>
-<div class="foot">
-  <span>Aperçu — Mael Ballay Checconi</span>
-  <span>Nantes, France — © 2026</span>
-</div>
+
+<footer class="site-footer">
+  <div class="sf-top">
+    <span class="sf-name">Mael Ballay Checconi</span>
+    <div class="sf-nav">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="index.html#projects-section">Projects</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </div>
+  <hr class="sf-sep">
+  <span class="sf-copy">© 2026 — All rights reserved</span>
+</footer>
 </body>
 </html>

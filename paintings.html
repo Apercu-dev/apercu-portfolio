@@ -31,7 +31,7 @@ nav{position:fixed;top:0;left:0;right:0;padding:1.4rem 2.5rem;display:flex;justi
 #track{position:absolute;top:0;left:0;height:100%;width:4400px;will-change:transform;pointer-events:none;}
 
 /* Marqueur */
-.marker{position:absolute;cursor:none;pointer-events:all;}
+.marker{position:absolute;cursor:none;pointer-events:all;padding:12px;margin:-12px;}
 .marker-dot{width:10px;height:10px;border-radius:50%;background:rgba(240,236,228,.15);border:1px solid rgba(240,236,228,.4);position:relative;z-index:2;transition:background .3s,transform .3s;}
 .marker:hover .marker-dot{background:var(--fg);transform:scale(1.4);}
 .marker-ring{position:absolute;top:50%;left:50%;border-radius:50%;border:1px solid rgba(240,236,228,.15);transform:translate(-50%,-50%);pointer-events:none;animation:markerPulse 3s ease-out infinite;}
@@ -39,11 +39,11 @@ nav{position:fixed;top:0;left:0;right:0;padding:1.4rem 2.5rem;display:flex;justi
 .marker-ring:nth-child(3){width:55px;height:55px;animation-delay:.8s;}
 .marker-ring:nth-child(4){width:80px;height:80px;animation-delay:1.6s;}
 @keyframes markerPulse{0%{opacity:.5;transform:translate(-50%,-50%) scale(.8);}100%{opacity:0;transform:translate(-50%,-50%) scale(1.1);}}
-.marker-label{position:absolute;top:20px;left:50%;transform:translateX(-50%);font-size:.52rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(240,236,228,.4);white-space:nowrap;pointer-events:none;transition:color .3s;}
+.marker-label{position:absolute;top:28px;left:50%;transform:translateX(-50%);font-size:.52rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(240,236,228,.4);white-space:nowrap;pointer-events:none;transition:color .3s;}
 .marker:hover .marker-label{color:var(--fg);}
 
 /* Fenêtre Windows */
-.win{position:fixed;border:1px solid rgba(240,236,228,.25);background:rgba(10,10,10,.92);backdrop-filter:blur(8px);z-index:100;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;transform:scale(.96) translateY(4px);}
+.win{position:fixed;border:1px solid rgba(240,236,228,.25);background:rgba(10,10,10,.92);backdrop-filter:blur(8px);z-index:100;opacity:0;pointer-events:none;transition:opacity .15s,transform .15s;transform:scale(.98) translateY(2px);}
 .win.visible{opacity:1;pointer-events:all;transform:scale(1) translateY(0);}
 .win-titlebar{display:flex;align-items:center;justify-content:space-between;padding:.35rem .6rem;background:rgba(240,236,228,.06);border-bottom:1px solid rgba(240,236,228,.1);cursor:none;}
 .win-title{font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(240,236,228,.7);}
@@ -89,6 +89,8 @@ nav{position:fixed;top:0;left:0;right:0;padding:1.4rem 2.5rem;display:flex;justi
 #intro-sub{font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:var(--mid);margin-bottom:2rem;}
 #intro-hint{font-size:.6rem;letter-spacing:.12em;color:rgba(240,236,228,.3);display:flex;align-items:center;gap:.8rem;}
 .intro-line{width:40px;height:1px;background:rgba(240,236,228,.2);}
+.foot{padding:1.5rem 2.5rem;border-top:1px solid rgba(240,236,228,.06);display:flex;justify-content:space-between;}
+.foot span{font-family:'DM Mono',monospace;font-size:.7rem;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:rgba(240,236,228,.25);}
 </style>
 </head>
 <body>
@@ -103,7 +105,7 @@ nav{position:fixed;top:0;left:0;right:0;padding:1.4rem 2.5rem;display:flex;justi
   <a href="index.html" id="nav-logo">APERÇU</a>
   <div class="nav-links">
     <a href="index.html">Home</a>
-    <a href="index.html#projects-section">Projects</a>
+    <a href="index.html#projects-section" class="active">Projects</a>
     <a href="about.html">About</a>
     <a href="contact.html">Contact</a>
   </div>
@@ -390,32 +392,61 @@ var PAINTINGS = [
 // ── Canvas topographique ──────────────────────────────────
 var topoC = document.getElementById('topo-canvas');
 var topoCtx = topoC.getContext('2d');
-var topoW = 0, topoH = 0;
+var topoVW = 0, topoVH = 0, topoTW = 0;
 
 var TOPO_CENTERS = [
-  {x:.18,y:.55,rx:.22,ry:.18,n:7},
-  {x:.52,y:.42,rx:.28,ry:.22,n:9},
-  {x:.78,y:.65,rx:.20,ry:.16,n:6},
-  {x:.35,y:.72,rx:.18,ry:.12,n:5},
-  {x:.65,y:.28,rx:.15,ry:.12,n:5},
+  {x:.04, y:.50, rx:.22, ry:.18, n:8},
+  {x:.09, y:.30, rx:.18, ry:.14, n:6},
+  {x:.12, y:.68, rx:.20, ry:.16, n:7},
+  {x:.17, y:.45, rx:.26, ry:.20, n:9},
+  {x:.20, y:.22, rx:.16, ry:.13, n:5},
+  {x:.23, y:.62, rx:.19, ry:.15, n:7},
+  {x:.27, y:.38, rx:.22, ry:.17, n:8},
+  {x:.30, y:.75, rx:.17, ry:.13, n:6},
+  {x:.33, y:.52, rx:.24, ry:.19, n:9},
+  {x:.36, y:.28, rx:.20, ry:.16, n:7},
+  {x:.39, y:.65, rx:.18, ry:.14, n:6},
+  {x:.42, y:.42, rx:.23, ry:.18, n:8},
+  {x:.45, y:.20, rx:.17, ry:.13, n:5},
+  {x:.47, y:.58, rx:.21, ry:.17, n:7},
+  {x:.50, y:.35, rx:.25, ry:.20, n:9},
+  {x:.53, y:.72, rx:.19, ry:.15, n:6},
+  {x:.56, y:.48, rx:.22, ry:.17, n:8},
+  {x:.59, y:.25, rx:.18, ry:.14, n:6},
+  {x:.62, y:.62, rx:.20, ry:.16, n:7},
+  {x:.65, y:.40, rx:.24, ry:.19, n:9},
+  {x:.68, y:.75, rx:.17, ry:.13, n:5},
+  {x:.71, y:.55, rx:.21, ry:.17, n:7},
+  {x:.74, y:.30, rx:.19, ry:.15, n:6},
+  {x:.77, y:.68, rx:.23, ry:.18, n:8},
+  {x:.80, y:.45, rx:.20, ry:.16, n:7},
+  {x:.83, y:.22, rx:.17, ry:.13, n:5},
+  {x:.86, y:.60, rx:.22, ry:.17, n:8},
+  {x:.89, y:.38, rx:.25, ry:.20, n:9},
+  {x:.92, y:.72, rx:.18, ry:.14, n:6},
+  {x:.95, y:.50, rx:.20, ry:.16, n:7},
+  {x:.98, y:.32, rx:.17, ry:.13, n:5},
 ];
 
+var TRACK_TOTAL = 4400;
+
 function resizeTopo(){
-  topoW = topoC.width  = window.innerWidth;
-  topoH = topoC.height = window.innerHeight;
+  topoVW = window.innerWidth;
+  topoVH = topoC.height = window.innerHeight;
+  topoTW = topoC.width  = TRACK_TOTAL + topoVW;
 }
 resizeTopo();
 window.addEventListener('resize', resizeTopo);
 
 function drawTopo(offsetX){
-  topoCtx.clearRect(0,0,topoW,topoH);
-  topoCtx.save();
-  topoCtx.translate(-offsetX * 0.15, 0);
+  topoCtx.clearRect(0, 0, topoTW, topoVH);
   TOPO_CENTERS.forEach(function(c){
-    var cx = c.x * topoW, cy = c.y * topoH;
+    var cx = c.x * TRACK_TOTAL;
+    var cy = c.y * topoVH;
     for(var i=1; i<=c.n; i++){
       var t = i/c.n;
-      var rx2 = c.rx * topoW * t, ry2 = c.ry * topoH * t;
+      var rx2 = c.rx * topoVW * t;
+      var ry2 = c.ry * topoVH * t;
       topoCtx.beginPath();
       for(var s=0; s<=80; s++){
         var angle = (s/80) * Math.PI * 2;
@@ -434,11 +465,11 @@ function drawTopo(offsetX){
     topoCtx.fillStyle='rgba(240,236,228,.4)';
     topoCtx.fill();
   });
-  topoCtx.strokeStyle='rgba(240,236,228,.06)';
+  topoCtx.strokeStyle='rgba(240,236,228,.04)';
   topoCtx.lineWidth=0.5;
-  for(var x=0;x<topoW+80;x+=80){topoCtx.beginPath();topoCtx.moveTo(x,0);topoCtx.lineTo(x,topoH);topoCtx.stroke();}
-  for(var y=0;y<topoH+80;y+=80){topoCtx.beginPath();topoCtx.moveTo(0,y);topoCtx.lineTo(topoW,y);topoCtx.stroke();}
-  topoCtx.restore();
+  for(var x=0;x<topoTW+80;x+=80){topoCtx.beginPath();topoCtx.moveTo(x,0);topoCtx.lineTo(x,topoVH);topoCtx.stroke();}
+  for(var y=0;y<topoVH+80;y+=80){topoCtx.beginPath();topoCtx.moveTo(0,y);topoCtx.lineTo(topoTW,y);topoCtx.stroke();}
+  topoC.style.transform = 'translateX(-'+offsetX+'px)';
 }
 
 // ── Curseur ──────────────────────────────────────────────
@@ -506,7 +537,7 @@ function createWindow(painting, anchorEl, type, offsetX, offsetY, imgSrc, winTit
         '<div class="win-btn win-btn-close"></div>'+
       '</div>'+
     '</div>'+
-    '<div class="win-body" '+bodyStyle+'><img src="'+imgSrc+'" loading="lazy" '+imgStyle+'></div>'+
+    '<div class="win-body" '+bodyStyle+'><img src="'+imgSrc+'" loading="eager" '+imgStyle+'></div>'+
     '<div class="win-footer"><span>'+painting.title+'</span><span>'+(type==='full'?painting.dims:type==='context'?painting.medium:'Détail')+'</span></div>'+
     (type==='full' && painting.description ? '<div class="win-desc">'+painting.description+'</div>' : '');
 
@@ -517,7 +548,7 @@ function createWindow(painting, anchorEl, type, offsetX, offsetY, imgSrc, winTit
   wy = Math.max(60, Math.min(window.innerHeight - 200, wy));
   win.style.left = wx+'px'; win.style.top = wy+'px'; win.style.width = (imgW+2)+'px';
   document.body.appendChild(win);
-  requestAnimationFrame(function(){ win.classList.add('visible'); });
+  win.classList.add('visible');
 
   // Stopper scroll sur la fenêtre
   win.addEventListener('wheel',function(e){ e.stopPropagation(); },{passive:true});
@@ -749,7 +780,7 @@ function showDetail(paintingId, idx, markerEl, hotspotEl){
     '<img src="'+cropSrc+'" style="width:100%;height:100%;object-fit:cover;display:block;"></div>'+
     '<div class="win-footer"><span>'+p.title+'</span><span>Détail '+(idx+1)+'</span></div>';
   document.body.appendChild(win);
-  requestAnimationFrame(function(){ win.classList.add('visible'); });
+  win.classList.add('visible');
   win.addEventListener('wheel',function(e){ e.stopPropagation(); },{passive:true});
 
   var hr = hotspotEl.getBoundingClientRect();

@@ -8,7 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-:root{--bg:#0a0a0a;--fg:#f0ece4;--dim:#2a2a2a;--mid:#444;}
+:root{--bg:#0a0a0a;--fg:#f0ece4;--dim:#555;--mid:#888;}
 html,body{width:100%;cursor:none;background:var(--bg);color:var(--fg);font-family:'DM Mono',monospace;}
 
 .cur{position:fixed;width:8px;height:8px;background:var(--fg);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:difference;}
@@ -27,7 +27,7 @@ html,body{width:100%;cursor:none;background:var(--bg);color:var(--fg);font-famil
 nav{position:fixed;top:0;left:0;right:0;padding:1.4rem 2.5rem;display:flex;justify-content:space-between;align-items:center;z-index:200;pointer-events:none;background:linear-gradient(to bottom,rgba(10,10,10,.9) 0%,transparent 100%);}
 #nav-logo{font-family:'Orbitron',sans-serif;font-weight:900;font-size:.9rem;letter-spacing:.1em;color:var(--fg);pointer-events:all;cursor:none;text-decoration:none;}
 .nav-links{display:flex;gap:2.5rem;}
-.nav-links a{font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--mid);text-decoration:none;pointer-events:all;transition:color .2s;cursor:none;}
+.nav-links a{font-size:.7rem;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:var(--mid);text-decoration:none;pointer-events:all;transition:color .2s;cursor:none;}
 .nav-links a:hover,.nav-links a.active{color:var(--fg);}
 
 /* Layout principal : deux colonnes sur toute la hauteur de la fenetre */
@@ -70,7 +70,7 @@ nav{position:fixed;top:0;left:0;right:0;padding:1.4rem 2.5rem;display:flex;justi
 .intro-text{
   font-size:.75rem;
   line-height:1.85;
-  color:#666;
+  color:#999;
   max-width:400px;
   opacity:0;
   animation:fadeUp .8s .35s forwards;
@@ -81,7 +81,7 @@ nav{position:fixed;top:0;left:0;right:0;padding:1.4rem 2.5rem;display:flex;justi
   opacity:0;
   animation:fadeUp .8s .55s forwards;
 }
-.contact-direct .label{font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);margin-bottom:.4rem;}
+.contact-direct .label{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);margin-bottom:.4rem;}
 .contact-direct a{display:block;font-size:.7rem;letter-spacing:.06em;color:var(--mid);text-decoration:none;margin-bottom:.3rem;transition:color .2s,transform .2s;cursor:none;pointer-events:all;}
 .contact-direct a:hover{color:var(--fg);transform:translateX(5px);}
 
@@ -102,7 +102,7 @@ nav{position:fixed;top:0;left:0;right:0;padding:1.4rem 2.5rem;display:flex;justi
 .section-block:nth-child(1){animation-delay:.4s;}
 .section-block:nth-child(2){animation-delay:.6s;}
 
-.sec-label{font-size:.52rem;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);margin-bottom:1rem;display:block;}
+.sec-label{font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);margin-bottom:1rem;display:block;}
 
 /* Instagram */
 .ig-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;}
@@ -118,7 +118,7 @@ nav{position:fixed;top:0;left:0;right:0;padding:1.4rem 2.5rem;display:flex;justi
 .ig-card:hover .ig-card-icon svg{fill:#0a0a0a !important;}
 .ig-card-icon{width:16px;height:16px;position:relative;z-index:1;}
 .ig-card-icon svg{width:100%;height:100%;fill:var(--fg);transition:fill .3s;}
-.ig-card-cat{font-size:.5rem;letter-spacing:.15em;text-transform:uppercase;
+.ig-card-cat{font-size:.58rem;letter-spacing:.15em;text-transform:uppercase;
   color:var(--dim);position:relative;z-index:1;transition:color .3s;}
 .ig-card-handle{font-size:.65rem;letter-spacing:.02em;color:var(--fg);
   position:relative;z-index:1;transition:color .3s;}
@@ -139,8 +139,7 @@ textarea.form-input{resize:none;height:65px;padding-top:.4rem;}
 .form-submit:hover .submit-arr{transform:translateX(4px);}
 .success-msg{display:none;font-size:.68rem;color:var(--fg);text-align:center;padding:.8rem 0;letter-spacing:.05em;}
 
-.footer-bar{position:relative;z-index:10;padding:.8rem 2.5rem;display:flex;justify-content:space-between;align-items:center;border-top:1px solid #1a1a1a;background:var(--bg);}
-.footer-bar span{font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;color:var(--dim);}
+
 
 /* =====================
    TABLETTE (481 - 1024px)
@@ -155,7 +154,7 @@ textarea.form-input{resize:none;height:65px;padding-top:.4rem;}
   .ig-grid { gap:.4rem; }
   .ig-card { padding:.7rem .6rem; }
   .ig-card-handle { font-size:.6rem; }
-  .footer-bar { padding:.8rem 2rem; }
+  .foot { padding:.8rem 2rem; }
 }
 
 /* =====================
@@ -220,7 +219,7 @@ textarea.form-input{resize:none;height:65px;padding-top:.4rem;}
   .ig-grid { gap:.4rem; }
   .ig-card { padding:.6rem .5rem; gap:.3rem; cursor:auto; -webkit-tap-highlight-color:transparent; }
   .ig-card-icon { width:12px; height:12px; }
-  .ig-card-cat { font-size:.45rem; }
+  .ig-card-cat { font-size:.52rem; }
   .ig-card-handle { font-size:.58rem; }
 
   /* Formulaire */
@@ -233,8 +232,24 @@ textarea.form-input{resize:none;height:65px;padding-top:.4rem;}
   #btn-canvas { display:none; }
 
   /* Footer */
-  .footer-bar { padding:.8rem 1.2rem; flex-direction:column; gap:.3rem; align-items:flex-start; }
+  .foot { padding:.8rem 1.2rem; flex-direction:column; gap:.3rem; align-items:flex-start; }
 }
+
+/* ── Site Footer B ─────────────────────────────────────────────── */
+.site-footer{background:var(--ink,#111);color:var(--cream,#f0ece4);padding:2rem 2.5rem 1.5rem;border-top:1px solid rgba(240,236,228,.06);}
+.sf-top{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:1.2rem;}
+.sf-name{font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(240,236,228,.55);}
+.sf-nav{display:flex;gap:2rem;}
+.sf-nav a{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(240,236,228,.3);text-decoration:none;transition:color .2s;}
+.sf-nav a:hover{color:rgba(240,236,228,.8);}
+.sf-sep{border:none;border-top:1px solid rgba(240,236,228,.06);margin:0 0 1rem;}
+.sf-copy{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(240,236,228,.18);}
+@media(max-width:600px){
+  .sf-top{flex-direction:column;gap:1.2rem;align-items:flex-start;}
+  .sf-nav{gap:1.2rem;flex-wrap:wrap;}
+  .site-footer{padding:1.5rem 1.2rem 1rem;}
+}
+/* ────────────────────────────────────────────────────────────────── */
 </style>
 </head>
 <body>
@@ -324,10 +339,19 @@ textarea.form-input{resize:none;height:65px;padding-top:.4rem;}
   </div>
 </div>
 
-<div class="footer-bar">
-  <span>Aperçu — Nantes, France</span>
-  <span>© 2026</span>
-</div>
+<footer class="site-footer">
+  <div class="sf-top">
+    <span class="sf-name">Mael Ballay Checconi</span>
+    <div class="sf-nav">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="index.html#projects-section">Projects</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </div>
+  <hr class="sf-sep">
+  <span class="sf-copy">© 2026 — All rights reserved</span>
+</footer>
 
 <script>
 var cur = document.getElementById('cur');
@@ -560,9 +584,5 @@ document.getElementById('contact-form').addEventListener('submit', function(e) {
 
 
 <script src="apercu-loader.js"></script>
-<div class="foot">
-  <span>Aperçu — Mael Ballay Checconi</span>
-  <span>Nantes, France — © 2026</span>
-</div>
 </body>
 </html>

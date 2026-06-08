@@ -102,7 +102,6 @@ nav{position:fixed;top:0;left:0;right:0;padding:1.4rem 2.5rem;display:flex;justi
 .cta-btn.secondary{border:1px solid rgba(240,236,228,.2);color:var(--fg);}
 .cta-btn.secondary:hover{border-color:var(--fg);}
 
-.foot{padding:1.5rem 2.5rem;border-top:1px solid rgba(240,236,228,.06);display:flex;justify-content:space-between;font-size:.5rem;letter-spacing:.1em;color:rgba(240,236,228,.2);}
 
 .reveal{opacity:0;transform:translateY(20px);transition:opacity .7s,transform .7s;}
 /* DEMOV2 POPUP */
@@ -202,6 +201,23 @@ nav{position:fixed;top:0;left:0;right:0;padding:1.4rem 2.5rem;display:flex;justi
 .shooting-track img:hover{filter:grayscale(0%);}
 
 .reveal.visible{opacity:1;transform:none;}
+
+
+/* ── Site Footer B ─────────────────────────────────────────────── */
+.site-footer{background:var(--ink,#111);color:var(--cream,#f0ece4);padding:2rem 2.5rem 1.5rem;border-top:1px solid rgba(240,236,228,.06);}
+.sf-top{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:1.2rem;}
+.sf-name{font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(240,236,228,.55);}
+.sf-nav{display:flex;gap:2rem;}
+.sf-nav a{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(240,236,228,.3);text-decoration:none;transition:color .2s;}
+.sf-nav a:hover{color:rgba(240,236,228,.8);}
+.sf-sep{border:none;border-top:1px solid rgba(240,236,228,.06);margin:0 0 1rem;}
+.sf-copy{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(240,236,228,.18);}
+@media(max-width:600px){
+  .sf-top{flex-direction:column;gap:1.2rem;align-items:flex-start;}
+  .sf-nav{gap:1.2rem;flex-wrap:wrap;}
+  .site-footer{padding:1.5rem 1.2rem 1rem;}
+}
+/* ────────────────────────────────────────────────────────────────── */
 </style>
 </head>
 <body>
@@ -214,7 +230,7 @@ nav{position:fixed;top:0;left:0;right:0;padding:1.4rem 2.5rem;display:flex;justi
   <a href="index.html" id="nav-logo">APERÇU</a>
   <div class="nav-links">
     <a href="index.html">Home</a>
-    <a href="index.html#projects-section">Projects</a>
+    <a href="index.html#projects-section" class="active">Projects</a>
     <a href="about.html">About</a>
     <a href="contact.html">Contact</a>
   </div>
@@ -365,10 +381,6 @@ nav{position:fixed;top:0;left:0;right:0;padding:1.4rem 2.5rem;display:flex;justi
     </div>
   </div>
 </section>
-<div class="foot">
-  <span>Aperçu — Mael Ballay Checconi</span>
-  <span>Nantes, France — © 2026</span>
-</div>
 
 <script>
 var cur=document.getElementById("cur"),ring=document.getElementById("ring");
@@ -453,5 +465,18 @@ var io=new IntersectionObserver(function(entries){
 document.querySelectorAll(".reveal").forEach(function(el){io.observe(el);});
 </script>
 <script src="apercu-loader.js"></script>
+<footer class="site-footer">
+  <div class="sf-top">
+    <span class="sf-name">Mael Ballay Checconi</span>
+    <div class="sf-nav">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="index.html#projects-section">Projects</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </div>
+  <hr class="sf-sep">
+  <span class="sf-copy">© 2026 — All rights reserved</span>
+</footer>
 </body>
 </html>
