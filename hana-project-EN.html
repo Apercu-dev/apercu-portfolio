@@ -285,6 +285,206 @@ nav{
   .site-footer{padding:1.5rem 1.2rem 1rem;}
 }
 /* ────────────────────────────────────────────────────────────────── */
+
+/* ═══════════════════════════════════════════════
+   MOBILE RESPONSIVE — hana-project
+   Corrections complètes responsive
+═══════════════════════════════════════════════ */
+
+/* Cursor custom désactivé sur touch */
+@media (hover: none) and (pointer: coarse) {
+  body { cursor: auto !important; }
+  #cur, #curRing { display: none !important; }
+  * { cursor: auto !important; }
+  a, button { cursor: pointer !important; }
+}
+
+@media (max-width: 768px) {
+  /* ── NAV ── */
+  nav {
+    padding: .9rem 1.2rem;
+    background: #0a0a0a !important;
+  }
+  .nav-links { display: none !important; }
+  #nav-logo { font-size: .78rem; }
+
+  /* ── LOADER ── */
+  .ld-logo { font-size: clamp(3rem, 18vw, 5rem); }
+
+  /* ── HERO ── */
+  .hero {
+    grid-template-columns: 1fr !important;
+    height: auto !important;
+    min-height: 100svh;
+    padding-top: 60px;
+    display: flex;
+    flex-direction: column;
+  }
+  .hero-left {
+    padding: 2rem 1.2rem 2rem;
+    order: 2;
+  }
+  .hero-right {
+    order: 1;
+    min-height: 44vw;
+    height: 52vw;
+    max-height: 320px;
+  }
+  .hero-kanji {
+    font-size: clamp(14rem, 60vw, 24rem);
+    right: -12vw;
+    bottom: -8vh;
+    opacity: .22;
+  }
+  #heroMascot {
+    width: min(280px, 70%) !important;
+  }
+  .hero-tag { font-size: .6rem; }
+  .hero-desc { font-size: .82rem; max-width: 100%; }
+  .hero-meta { gap: 1.5rem; }
+  .hm span { font-size: .82rem; }
+  .scroll-hint { display: none; }
+
+  /* ── MARQUEE ── */
+  .mq { padding: .65rem 0; }
+  .mq-i { font-size: .7rem; padding: 0 1.2rem; }
+
+  /* ── CUP SECTIONS ── */
+  .cup-sec {
+    grid-template-columns: 1fr !important;
+    height: auto !important;
+    min-height: auto;
+    direction: ltr !important;
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+    display: flex;
+    flex-direction: column;
+  }
+  .cup-sec.flip { direction: ltr !important; }
+  .cup-sec.flip > * { direction: ltr !important; }
+
+  .cup-vis {
+    padding: 2rem 1.2rem 1rem;
+    order: 1;
+    width: 100%;
+  }
+  .cup-vis img.cup-img {
+    width: min(260px, 72%) !important;
+    margin: 0 auto;
+    display: block;
+  }
+  .cup-info {
+    padding: 1.2rem 1.2rem 2.5rem;
+    order: 2;
+    position: relative;
+  }
+  .cup-fl {
+    font-size: clamp(2.2rem, 10vw, 3.5rem) !important;
+    margin-bottom: .7rem;
+  }
+  .cup-n { margin-bottom: 1.2rem; }
+  .cup-body { max-width: 100%; font-size: .9rem; margin-bottom: 1.5rem; }
+  .cup-deco { display: none; }
+  .cup-divider { display: none; }
+  .dn-arrow { display: none; }
+  .mascot-badge {
+    display: none !important;
+  }
+  /* Fleuri mascot hack */
+  .cup-sec.flip > div[style*="position:absolute"] {
+    display: none !important;
+  }
+
+  /* ── MASCOTTES ── */
+  .mascots { padding: 4rem 1.2rem; }
+  .mascots-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.2rem;
+    margin-top: 2.5rem;
+  }
+  .mc { padding: 2rem 1.5rem; }
+  .mc-img { width: 130px; height: 130px; }
+  .mc-name { font-size: 1.3rem; }
+
+  /* ── LABELS STRIP ── */
+  .labels { padding: 4rem 0; }
+  .labels-hd { padding: 0 1.2rem; margin-bottom: 2rem; }
+  .ls { padding: 0 1.2rem 1.5rem; gap: 1rem; }
+  .ls-slide {
+    width: clamp(280px, 82vw, 480px) !important;
+    border-radius: 12px;
+  }
+  .ls-cap strong { font-size: .75rem; }
+  .ls-cap span { font-size: .6rem; }
+
+  /* ── RECIPES ── */
+  .recipes { padding: 4rem 1.2rem; }
+  .recipes-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.2rem;
+    margin-top: 2.5rem;
+  }
+  .steps {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+  .step-n { font-size: 1.8rem; }
+  .step-txt { font-size: .82rem; }
+
+  /* ── DA section ── */
+  .da { padding: 4rem 1.2rem; }
+  .da-block { margin-top: 3rem; }
+  .da-grid.g2,
+  .da-grid.g3,
+  .da-grid.g4 {
+    grid-template-columns: 1fr !important;
+    gap: 1.2rem;
+  }
+  .typo-row {
+    grid-template-columns: 1fr !important;
+    gap: 1rem;
+  }
+  .s-title {
+    font-size: clamp(1.8rem, 7vw, 3rem);
+  }
+  .da-h {
+    font-size: clamp(1.4rem, 6vw, 2rem);
+  }
+  .da-note {
+    padding: 1rem 1.2rem;
+    font-size: .82rem;
+  }
+
+  /* ── CTA ── */
+  .cta { padding: 6rem 1.2rem; }
+  .cta-t {
+    font-size: clamp(2.8rem, 12vw, 5rem);
+  }
+  .cta-s { font-size: .85rem; }
+  .btn-o {
+    padding: .85rem 2rem;
+    font-size: .72rem;
+  }
+
+  /* ── SECTIONS shared ── */
+  .mascots > .s-tag,
+  .recipes > .s-tag,
+  .da > .s-tag { display: block; }
+
+  /* PROGRESS BAR */
+  #prog { height: 2px; }
+}
+
+@media (max-width: 480px) {
+  .steps {
+    grid-template-columns: 1fr !important;
+  }
+  .cup-vis img.cup-img {
+    width: min(220px, 75%) !important;
+  }
+}
+
 </style>
 </head>
 <body>

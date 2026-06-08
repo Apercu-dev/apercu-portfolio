@@ -16,7 +16,7 @@ body{background:var(--bg);color:var(--fg);font-family:"DM Mono",monospace;cursor
 .cur-ring{position:fixed;width:32px;height:32px;border:1px solid rgba(240,236,228,.3);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .25s,height .25s;}
 .cur-ring.hov{width:56px;height:56px;}
 
-nav{position:fixed;top:0;left:0;right:0;padding:1.4rem 2.5rem;display:flex;justify-content:space-between;align-items:center;z-index:500;background:linear-gradient(to bottom,rgba(10,10,10,.95),transparent);pointer-events:none;}
+nav{position:fixed;top:0;left:0;right:0;padding:1.4rem 2.5rem;display:flex;justify-content:space-between;align-items:center;z-index:500;background:linear-gradient(to bottom,rgba(10,10,10,.95),transparent);pointer-events:all;}
 #nav-logo{font-family:"Orbitron",sans-serif;font-weight:900;font-size:.9rem;letter-spacing:.1em;color:var(--fg);pointer-events:all;cursor:none;text-decoration:none;}
 .nav-links{display:flex;gap:2.5rem;}
 .nav-links a{font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--mid);text-decoration:none;pointer-events:all;transition:color .2s;cursor:none;}
@@ -218,6 +218,236 @@ nav{position:fixed;top:0;left:0;right:0;padding:1.4rem 2.5rem;display:flex;justi
   .site-footer{padding:1.5rem 1.2rem 1rem;}
 }
 /* ────────────────────────────────────────────────────────────────── */
+
+/* ═══════════════════════════════════════════════
+   MOBILE RESPONSIVE — beanies.html
+   Corrections complètes responsive
+═══════════════════════════════════════════════ */
+
+/* Cursor custom désactivé sur touch */
+@media (hover: none) and (pointer: coarse) {
+  body { cursor: auto !important; }
+  .cur, .cur-ring { display: none !important; }
+  * { cursor: auto !important; }
+  button, a, [role="button"] { cursor: pointer !important; }
+}
+
+@media (max-width: 768px) {
+  /* NAV — rendu accessible et visible */
+  nav {
+    padding: 1rem 1.2rem;
+    background: rgba(10,10,10,.98) !important;
+    pointer-events: all !important;
+  }
+  .nav-links {
+    display: none;
+  }
+  #nav-logo {
+    font-size: .78rem;
+  }
+
+  /* HERO — stack vertical */
+  #hero {
+    min-height: 100svh;
+    padding-top: 60px;
+  }
+  .hero-content {
+    grid-template-columns: 1fr !important;
+    gap: 2rem;
+    padding: 1.5rem 1.2rem 3rem;
+  }
+  .hero-left {
+    gap: 1.2rem;
+    order: 1;
+  }
+  .hero-title {
+    font-size: clamp(1.8rem, 9vw, 2.8rem) !important;
+  }
+  .hero-sub {
+    font-size: .78rem;
+    line-height: 1.7;
+  }
+  .hero-tag {
+    font-size: .6rem;
+  }
+  .badge {
+    font-size: .58rem;
+    padding: .4rem .9rem;
+  }
+  .badges {
+    gap: .5rem;
+    flex-wrap: wrap;
+  }
+
+  /* VIEWER 3D — adapté au mobile */
+  .viewer {
+    order: 2;
+    width: 100%;
+    align-items: center;
+  }
+  .viewer-float {
+    animation: none; /* évite les tremblements sur mobile */
+  }
+  .viewer-stage {
+    width: min(320px, 88vw) !important;
+    height: min(300px, 80vw) !important;
+    perspective: 800px;
+    margin: 0 auto;
+  }
+  .v-face img {
+    max-width: 90%;
+    max-height: 90%;
+  }
+  .v-tabs {
+    width: 100%;
+    max-width: 320px;
+  }
+  .v-tab {
+    flex: 1;
+    font-size: .58rem;
+    padding: .6rem .5rem;
+  }
+  .v-btns {
+    width: 100%;
+    max-width: 320px;
+    justify-content: center;
+  }
+  .v-btn {
+    font-size: .58rem;
+    padding: .6rem 1.5rem;
+  }
+  .v-hint {
+    font-size: .52rem;
+  }
+
+  /* STORY GRID — 1 colonne */
+  .story-grid {
+    grid-template-columns: 1fr !important;
+    border: none;
+    gap: 0;
+  }
+  .story-grid > div {
+    padding: 1.8rem 0;
+    border-right: none !important;
+    border-bottom: 1px solid rgba(240,236,228,.07);
+  }
+  .story-grid > div:last-child {
+    border-bottom: none;
+  }
+  .story-label {
+    font-size: .58rem;
+  }
+  .story-title {
+    font-size: 1rem;
+    line-height: 1.2;
+  }
+  .story-text {
+    font-size: .72rem;
+    line-height: 1.8;
+  }
+
+  /* SECTIONS padding */
+  .section {
+    padding: 3rem 1.2rem;
+  }
+  .sep {
+    margin: 0 1.2rem;
+  }
+
+  /* SHOOTING — hauteur réduite */
+  .shooting-section {
+    padding: 3rem 0 3rem 1.2rem;
+  }
+  .shooting-title {
+    font-size: .9rem;
+    padding-right: 1.2rem;
+  }
+  .shooting-label {
+    padding-right: 1.2rem;
+  }
+  .shooting-track img {
+    height: 240px !important;
+    width: auto;
+  }
+
+  /* DETAILS GRID — 2 colonnes sur mobile */
+  .details-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0;
+  }
+  .d-item {
+    padding: 1.4rem 1rem;
+  }
+  .d-num {
+    font-size: .5rem;
+  }
+  .d-name {
+    font-size: .65rem;
+  }
+  .d-desc {
+    font-size: .62rem;
+    line-height: 1.65;
+  }
+
+  /* MARQUEE */
+  .marquee-item {
+    font-size: .52rem;
+  }
+
+  /* CTA */
+  #cta {
+    padding: 4rem 1.2rem;
+  }
+  .cta-title {
+    font-size: clamp(1.4rem, 7vw, 2rem);
+  }
+  .cta-sub {
+    font-size: .72rem;
+  }
+  .cta-btns {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    max-width: 280px;
+    gap: .8rem;
+  }
+  .cta-btn {
+    text-align: center;
+    padding: .85rem 1.5rem;
+    font-size: .62rem;
+  }
+
+  /* POPUPS DEMOV2 — repositionné */
+  .demov2-popup {
+    position: fixed;
+    top: auto !important;
+    left: 50% !important;
+    bottom: 2rem;
+    transform: translateX(-50%) scale(.92) !important;
+    transform-origin: bottom center !important;
+  }
+  .demov2-popup.open {
+    transform: translateX(-50%) scale(1) !important;
+  }
+  .demov2-popup::before {
+    display: none;
+  }
+  .demov2-popup a {
+    font-size: .62rem;
+    padding: .4rem 0;
+  }
+}
+
+@media (max-width: 390px) {
+  .details-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .viewer-stage {
+    width: min(280px, 90vw) !important;
+    height: min(260px, 85vw) !important;
+  }
+}
+
 </style>
 </head>
 <body>
