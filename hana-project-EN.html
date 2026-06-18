@@ -37,24 +37,13 @@ body{background:var(--cream);color:var(--ink);font-family:'M PLUS Rounded 1c',sa
 @keyframes ldf{from{width:0}to{width:100%}}
 @keyframes ldp{from{opacity:.3}to{opacity:1}}
 
-nav{
-  position:fixed;top:0;left:0;right:0;
-  padding:1.4rem 2.5rem;
-  display:flex;justify-content:space-between;align-items:center;
-  z-index:500;background:#0a0a0a;
-  border-bottom:1px solid #1a1a1a;
-}
+nav{position:fixed;top:0;left:0;right:0;padding:1.4rem 2.5rem;display:flex;justify-content:space-between;align-items:center;z-index:500;pointer-events:none;}
 #nav-logo{
   font-family:'Orbitron',sans-serif;font-weight:900;font-size:.9rem;
   letter-spacing:.1em;color:#f0ece4;text-decoration:none;
-  cursor:none;
-}
-.nav-links{display:flex;gap:2.5rem;list-style:none}
-.nav-links a{
-  font-family:'DM Mono',monospace;font-size:.71rem;letter-spacing:.18em;
-  text-transform:uppercase;color:#666;text-decoration:none;
-  transition:color .2s;cursor:none;
-}
+  cursor:none;pointer-events:all;}
+.nav-links{display:flex;gap:2.5rem;}
+.nav-links a{font-family:'DM Mono',monospace;font-size:.72rem;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:#666;text-decoration:none;pointer-events:all;transition:color .2s;cursor:none;}
 .nav-links a:hover,.nav-links a.active{color:#f0ece4;}
 
 /* REVEALS */
@@ -257,7 +246,7 @@ nav{
 .fl a:hover{opacity:1}
 
 @media(max-width:900px){
-  nav{padding:1rem 1.5rem}.nav-links{display:none}
+  nav{padding:1rem 1.5rem}.nav-links{display:flex;gap:1.2rem}
   .hero,.cup-sec{grid-template-columns:1fr;height:auto;min-height:100svh}
   .hero-left,.cup-info{padding:2rem 1.5rem 3rem}
   .cup-vis{padding:2rem 0}
@@ -305,7 +294,7 @@ nav{
     padding: .9rem 1.2rem;
     background: #0a0a0a !important;
   }
-  .nav-links { display: none !important; }
+  .nav-links { display:flex !important; gap:1.2rem; }
   #nav-logo { font-size: .78rem; }
 
   /* ── LOADER ── */
@@ -485,6 +474,18 @@ nav{
   }
 }
 
+
+/* Touch devices : restaurer le curseur natif (unifie) */
+@media (hover:none) and (pointer:coarse){
+  *{cursor:auto!important;}
+  a,button,[role="button"]{cursor:pointer!important;}
+  .cursor,.cursor-ring,.trail,.cur,.cur-ring,#cur,#ring,#curRing{display:none!important;}
+}
+
+@media(max-width:360px){
+  nav { padding:.8rem 1rem; }
+  .nav-links { gap:.9rem; }
+}
 </style>
 </head>
 <body>
@@ -502,12 +503,12 @@ nav{
 <!-- NAV -->
 <nav>
   <a href="index.html" id="nav-logo">APERÇU</a>
-  <ul class="nav-links">
-    <li><a href="index.html">Home</a></li>
-    <li><a href="index.html#projects-section" class="active">Projects</a></li>
-    <li><a href="about.html">About</a></li>
-    <li><a href="contact.html">Contact</a></li>
-  </ul>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="index.html#projects-section" class="active">Projects</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+  </div>
 </nav>
 
 <!-- ══════════════════ S1 · HERO ══════════════════ -->

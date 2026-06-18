@@ -25,7 +25,7 @@ body{background:var(--bg);color:var(--fg);font-family:'DM Mono',monospace;cursor
 #cur{position:fixed;width:8px;height:8px;background:var(--fg);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:difference;opacity:0}
 #ring{position:fixed;width:32px;height:32px;border:1px solid rgba(240,236,228,.3);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .25s,height .25s;opacity:0}
 #ring.hov{width:52px;height:52px}
-@media(hover:none) and (pointer:coarse){body{cursor:auto!important}#cur,#ring{display:none!important}*{cursor:auto!important}a,button{cursor:pointer!important}}
+@media(hover:none) and (pointer:coarse){body{cursor:auto!important}*{cursor:auto!important}a,button,[role="button"]{cursor:pointer!important}.cursor,.cursor-ring,.trail,.cur,.cur-ring,#cur,#ring,#curRing{display:none!important}}
 
 /* ── PROGRESS ────────────────────────────────────────────────── */
 #prog{position:fixed;top:0;left:0;height:1px;background:var(--fg);z-index:1001;width:0;transition:width .1s linear;opacity:.35}
@@ -39,10 +39,10 @@ body{background:var(--bg);color:var(--fg);font-family:'DM Mono',monospace;cursor
 .ld-bar{height:100%;background:var(--stone);width:0;transition:width 1.4s ease-out}
 
 /* ── NAV — exact match ───────────────────────────────────────── */
-nav{position:fixed;top:0;left:0;right:0;padding:1.4rem 2.5rem;display:flex;justify-content:space-between;align-items:center;z-index:500;background:rgba(10,10,10,.97);border-bottom:1px solid #1a1a1a}
-#nav-logo{font-family:'Orbitron',sans-serif;font-weight:900;font-size:.9rem;letter-spacing:.1em;color:var(--fg);text-decoration:none;cursor:none}
-.nav-links{display:flex;gap:2.5rem;list-style:none}
-.nav-links a{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--mid);text-decoration:none;transition:color .2s;cursor:none}
+nav{position:fixed;top:0;left:0;right:0;padding:1.4rem 2.5rem;display:flex;justify-content:space-between;align-items:center;z-index:500;pointer-events:none;}
+#nav-logo{font-family:'Orbitron',sans-serif;font-weight:900;font-size:.9rem;letter-spacing:.1em;color:var(--fg);text-decoration:none;cursor:none;pointer-events:all;}
+.nav-links{display:flex;gap:2.5rem;}
+.nav-links a{font-family:'DM Mono',monospace;font-size:.72rem;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:#666;text-decoration:none;pointer-events:all;transition:color .2s;cursor:none;}
 .nav-links a:hover{color:var(--fg)}
 
 /* ── HERO ────────────────────────────────────────────────────── */
@@ -170,7 +170,7 @@ nav{position:fixed;top:0;left:0;right:0;padding:1.4rem 2.5rem;display:flex;justi
 /* ── MOBILE ──────────────────────────────────────────────────── */
 @media(max-width:900px){
   nav{padding:1rem 1.2rem}
-  .nav-links{display:none}
+  .nav-links{display:flex;gap:1.2rem}
   #hero{padding-top:60px}
   .hero-content{grid-template-columns:1fr!important;gap:2.5rem;padding:2.5rem 1.2rem 3rem}
   .hero-img-single{max-width:100%;margin:0}
@@ -224,6 +224,11 @@ nav{position:fixed;top:0;left:0;right:0;padding:1.4rem 2.5rem;display:flex;justi
 .d-item.open .d-desc{max-height:160px;opacity:1;margin-top:.4rem}
 .d-prop{font-size:.48rem;letter-spacing:.18em;text-transform:uppercase;color:var(--stone);margin-top:.55rem}
 
+
+@media(max-width:360px){
+  nav { padding:.8rem 1rem; }
+  .nav-links { gap:.9rem; }
+}
 </style>
 </head>
 <body>
@@ -242,12 +247,12 @@ nav{position:fixed;top:0;left:0;right:0;padding:1.4rem 2.5rem;display:flex;justi
 <!-- NAV -->
 <nav>
   <a href="index.html" id="nav-logo">APERÇU</a>
-  <ul class="nav-links">
-    <li><a href="index.html">Home</a></li>
-    <li><a href="index.html#projects-section">Projects</a></li>
-    <li><a href="about.html">About</a></li>
-    <li><a href="contact.html">Contact</a></li>
-  </ul>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="index.html#projects-section" class="active">Projects</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+  </div>
 </nav>
 
 <!-- ═══ HERO ════════════════════════════════════════════════════ -->
