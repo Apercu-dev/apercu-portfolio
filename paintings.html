@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Paintings — Virtual exhibition of works by Mael Ballay Checconi. Acrylic on canvas, topographic exploration.">
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paintings — Aperçu</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{--bg:#0a0a0a;--fg:#f0ece4;--dim:#1a1a1a;--mid:#444;}
+html,body{width:100%;height:100%;overflow:hidden;cursor:none;background:var(--bg);color:var(--fg);font-family:'DM Mono',monospace;}
+
+/* Curseur */
+.cur{position:fixed;width:8px;height:8px;background:var(--fg);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:difference;}
+.cur-ring{position:fixed;width:32px;height:32px;border:1px solid rgba(240,236,228,.3);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .25s,height .25s;}
+.cur-ring.hov{width:56px;height:56px;}
+
+/* Nav */
+nav{position:fixed;top:0;left:0;right:0;padding:1.4rem 2.5rem;display:flex;justify-content:space-between;align-items:center;z-index:500;pointer-events:none;background:linear-gradient(to bottom,rgba(10,10,10,.95),transparent);}
+#nav-logo{font-family:'Orbitron',sans-serif;font-weight:900;font-size:.9rem;letter-spacing:.1em;color:var(--fg);pointer-events:all;cursor:none;text-decoration:none;}
+.nav-links{display:flex;gap:2.5rem;}
+.nav-links a{font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--mid);text-decoration:none;pointer-events:all;transition:color .2s;cursor:none;}
+.nav-links a:hover,.nav-links a.active{color:var(--fg);}
+
+/* Canvas topo */
+#topo-canvas{position:fixed;inset:0;z-index:1;}
+
+/* Scène */
+#scene{position:fixed;inset:0;z-index:10;overflow:hidden;cursor:none;}
+#track{position:absolute;top:0;left:0;height:100%;width:7700px;will-change:transform;pointer-events:none;}
+
+/* Marqueur */
+.marker{position:absolute;cursor:none;pointer-events:all;padding:12px;margin:-12px;}
+.marker-dot{width:10px;height:10px;border-radius:50%;background:rgba(240,236,228,.15);border:1px solid rgba(240,236,228,.4);position:relative;z-index:2;transition:background .3s,transform .3s;}
+.marker:hover .marker-dot{background:var(--fg);transform:scale(1.4);}
+.marker-ring{position:absolute;top:50%;left:50%;border-radius:50%;border:1px solid rgba(240,236,228,.15);transform:translate(-50%,-50%);pointer-events:none;animation:markerPulse 3s ease-out infinite;}
+.marker-ring:nth-child(2){width:30px;height:30px;animation-delay:0s;}
+.marker-ring:nth-child(3){width:55px;height:55px;animation-delay:.8s;}
+.marker-ring:nth-child(4){width:80px;height:80px;animation-delay:1.6s;}
+@keyframes markerPulse{0%{opacity:.5;transform:translate(-50%,-50%) scale(.8);}100%{opacity:0;transform:translate(-50%,-50%) scale(1.1);}}
+.marker-label{position:absolute;top:28px;left:50%;transform:translateX(-50%);font-size:.52rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(240,236,228,.4);white-space:nowrap;pointer-events:none;transition:color .3s;}
+.marker:hover .marker-label{color:var(--fg);}
+
+/* Fenêtre Windows */
+.win{position:fixed;border:1px solid rgba(240,236,228,.25);background:rgba(10,10,10,.92);backdrop-filter:blur(8px);z-index:100;opacity:0;pointer-events:none;transition:opacity .15s,transform .15s;transform:scale(.98) translateY(2px);}
+.win.visible{opacity:1;pointer-events:all;transform:scale(1) translateY(0);}
+.win-titlebar{display:flex;align-items:center;justify-content:space-between;padding:.35rem .6rem;background:rgba(240,236,228,.06);border-bottom:1px solid rgba(240,236,228,.1);cursor:none;}
+.win-title{font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(240,236,228,.7);}
+.win-btns{display:flex;gap:.3rem;}
+.win-btn{width:10px;height:10px;border-radius:50%;border:1px solid rgba(240,236,228,.2);background:rgba(240,236,228,.08);cursor:none;transition:background .15s,transform .15s;}
+.win-btn:hover{transform:scale(1.2);}
+.win-btn-close:hover{background:rgba(255,90,90,.7);border-color:rgba(255,90,90,.8);}
+.win-btn-next:hover{background:rgba(255,190,50,.7);border-color:rgba(255,190,50,.8);}
+.win-btn-expand:hover{background:rgba(80,200,120,.7);border-color:rgba(80,200,120,.8);}
+.win-body{overflow:hidden;}
+.win-footer{padding:.35rem .6rem;border-top:1px solid rgba(240,236,228,.1);font-size:.5rem;letter-spacing:.1em;color:rgba(240,236,228,.35);display:flex;justify-content:space-between;}
+.win-desc{padding:.5rem .7rem;font-size:.52rem;line-height:1.7;color:rgba(240,236,228,.45);border-top:1px solid rgba(240,236,228,.06);max-height:80px;overflow-y:auto;overscroll-behavior:contain;}
+.win-desc::-webkit-scrollbar{width:2px;}
+.win-desc::-webkit-scrollbar-thumb{background:rgba(240,236,228,.15);}
+
+/* Hotspots */
+.hotspot{z-index:150;cursor:none;}
+.hotspot-inner{width:100%;height:100%;border:1px dashed rgba(240,236,228,.25);position:relative;transition:border-color .2s,background .2s;}
+.hotspot:hover .hotspot-inner{border-color:rgba(240,236,228,.7);background:rgba(240,236,228,.05);}
+.hs-label{position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);font-size:.45rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(240,236,228,.35);white-space:nowrap;transition:color .2s;}
+.hotspot:hover .hs-label{color:rgba(240,236,228,.8);}
+
+/* Lignes SVG */
+#lines-svg{position:fixed;inset:0;pointer-events:none;z-index:99;}
+
+/* HUD */
+#hud{position:fixed;bottom:0;left:0;right:0;padding:1rem 2.5rem;z-index:200;display:flex;justify-content:space-between;align-items:flex-end;background:linear-gradient(to top,rgba(10,10,10,.8),transparent);pointer-events:none;}
+.hud-left{font-size:.58rem;letter-spacing:.12em;color:rgba(240,236,228,.4);}
+.hud-coords{font-size:.55rem;letter-spacing:.1em;color:rgba(240,236,228,.25);}
+#hud-title{font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(1rem,2vw,1.8rem);color:var(--fg);letter-spacing:.05em;opacity:0;transition:opacity .4s;}
+#hud-title.visible{opacity:1;}
+
+/* Scroll hint */
+#scroll-hint{position:fixed;right:2.5rem;top:50%;transform:translateY(-50%);z-index:200;pointer-events:none;display:flex;flex-direction:column;align-items:center;gap:.4rem;opacity:.3;transition:opacity .5s;}
+#scroll-hint.hidden{opacity:0;}
+#scroll-hint span{font-size:.5rem;letter-spacing:.15em;text-transform:uppercase;color:var(--fg);writing-mode:vertical-rl;}
+.scroll-arrow{width:1px;height:30px;background:linear-gradient(to bottom,transparent,var(--fg));}
+
+/* Intro */
+#intro{position:fixed;inset:0;z-index:1000;display:flex;flex-direction:column;justify-content:flex-end;padding:3rem 2.5rem;background:var(--bg);transition:opacity .8s,transform .8s;}
+#intro.out{opacity:0;pointer-events:none;transform:translateY(-10px);}
+#intro-title{font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(2rem,6vw,6rem);line-height:.9;color:var(--fg);margin-bottom:1rem;}
+#intro-sub{font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:var(--mid);margin-bottom:2rem;}
+#intro-hint{font-size:.6rem;letter-spacing:.12em;color:rgba(240,236,228,.3);display:flex;align-items:center;gap:.8rem;}
+.intro-line{width:40px;height:1px;background:rgba(240,236,228,.2);}
+.foot{padding:1.5rem 2.5rem;border-top:1px solid rgba(240,236,228,.06);display:flex;justify-content:space-between;}
+.foot span{font-family:'DM Mono',monospace;font-size:.7rem;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:rgba(240,236,228,.25);}
+
+/* ============================================================
+   RESPONSIVE — tablette & mobile
+   Ajouts uniquement : surcharges sous 768px puis 480px.
+   Les regles desktop ci-dessus restent la source par defaut.
+   ============================================================ */
+
+/* Appareils tactiles : rendre un curseur natif (le curseur custom
+   suit la souris et reste inerte/invisible au doigt). */
+@media (hover:none) and (pointer:coarse){
+  html,body,#scene,#track,.marker,.win-titlebar,.win-btn,.hotspot,
+  #nav-logo,.nav-links a{cursor:auto;}
+  .cur,.cur-ring{display:none;}
+}
+
+/* ---- Tablette et petit desktop ---- */
+@media (max-width:768px){
+  nav{padding:1rem 1.2rem;}
+  .nav-links{gap:1.1rem;}
+  .nav-links a{font-size:.58rem;letter-spacing:.12em;}
+  #nav-logo{font-size:.8rem;}
+
+  #hud{padding:.8rem 1.2rem;}
+  .hud-left{font-size:.54rem;}
+  .hud-coords{font-size:.5rem;}
+
+  #scroll-hint{right:1rem;}
+  #intro{padding:2rem 1.3rem;}
+  .foot{padding:1.2rem 1.3rem;}
+}
+
+/* ---- Mobile ---- */
+@media (max-width:480px){
+  nav{padding:.85rem 1rem;}
+  /* Les liens restent visibles (pas de burger) mais compacts.
+     On garde logo + liens sur une ligne, en reduisant l'echelle. */
+  .nav-links{gap:.7rem;}
+  .nav-links a{font-size:.52rem;letter-spacing:.08em;}
+  #nav-logo{font-size:.72rem;letter-spacing:.06em;}
+
+  #hud{padding:.7rem .9rem;flex-wrap:wrap;gap:.3rem;}
+  .hud-left{font-size:.5rem;}
+  .hud-coords{font-size:.46rem;}
+  #hud-title{font-size:clamp(.85rem,4vw,1.3rem);}
+
+  /* Indice de scroll : discret, ne pas empieter le contenu */
+  #scroll-hint{right:.6rem;gap:.3rem;}
+  #scroll-hint span{font-size:.45rem;}
+  .scroll-arrow{height:22px;}
+
+  #intro{padding:1.6rem 1.1rem;}
+  #intro-sub{font-size:.6rem;}
+  #intro-hint{font-size:.52rem;}
+
+  /* Marqueurs : label un cran plus petit pour eviter les chevauchements */
+  .marker-label{font-size:.48rem;}
+
+  /* Fenetres : la taille est pilotee par le clamp JS (createWindow),
+     qui reduit la LARGEUR pour que l'ensemble image + footer + desc
+     tienne dans l'ecran. On ne met pas de max-height + overflow ici :
+     cela croperait l'image au lieu de la reduire. On borne seulement
+     la largeur en secours. */
+  .win{max-width:calc(100vw - 20px);}
+  .win-desc{max-height:56px;}
+}
+
+/* Tres petits ecrans */
+@media (max-width:360px){
+  .nav-links{gap:.5rem;}
+  .nav-links a{font-size:.48rem;}
+  #nav-logo{font-size:.66rem;}
+}
+</style>
+</head>
+<body>
+
+
+<canvas id="topo-canvas"></canvas>
+<div class="cur" id="cur"></div>
+<div class="cur-ring" id="ring"></div>
+<svg id="lines-svg"></svg>
+
+<nav>
+  <a href="index.html" id="nav-logo">APERÇU</a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="index.html#projects-section" class="active">Projects</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+  </div>
+</nav>
+
+<div id="intro">
+  <div id="intro-title">PAINTINGS<br><span style="color:transparent;-webkit-text-stroke:1px rgba(240,236,228,.3)">EXPO</span></div>
+  <div id="intro-sub">Virtual exhibition — Scroll to explore</div>
+  <div id="intro-hint"><div class="intro-line"></div>Move horizontally to navigate the terrain</div>
+</div>
+
+<div id="scene">
+  <div id="track">
+    <!-- PEINTURE 01 -->
+    <div class="marker" id="marker-0" data-id="0" style="left:320px;top:58%;">
+      <div class="marker-ring"></div><div class="marker-ring"></div><div class="marker-ring"></div>
+      <div class="marker-dot"></div>
+      <div class="marker-label">01 — Melancholy Spikes</div>
+    </div>
+    <!-- PEINTURE 02 -->
+    <div class="marker" id="marker-1" data-id="1" style="left:620px;top:35%;">
+      <div class="marker-ring"></div><div class="marker-ring"></div><div class="marker-ring"></div>
+      <div class="marker-dot"></div>
+      <div class="marker-label">02 — Burning Love</div>
+    </div>
+    <!-- PEINTURE 03 -->
+    <div class="marker" id="marker-2" data-id="2" style="left:920px;top:65%;">
+      <div class="marker-ring"></div><div class="marker-ring"></div><div class="marker-ring"></div>
+      <div class="marker-dot"></div>
+      <div class="marker-label">03 — Hateful</div>
+    </div>
+    <!-- PEINTURE 04 -->
+    <div class="marker" id="marker-3" data-id="3" style="left:1220px;top:42%;">
+      <div class="marker-ring"></div><div class="marker-ring"></div><div class="marker-ring"></div>
+      <div class="marker-dot"></div>
+      <div class="marker-label">04 — Pollen Reef</div>
+    </div>
+    <!-- PEINTURE 05 -->
+    <div class="marker" id="marker-4" data-id="4" style="left:1520px;top:52%;">
+      <div class="marker-ring"></div><div class="marker-ring"></div><div class="marker-ring"></div>
+      <div class="marker-dot"></div>
+      <div class="marker-label">05 — Amethyst Shelter</div>
+    </div>
+    <!-- PEINTURE 06 -->
+    <div class="marker" id="marker-5" data-id="5" style="left:1820px;top:38%;">
+      <div class="marker-ring"></div><div class="marker-ring"></div><div class="marker-ring"></div>
+      <div class="marker-dot"></div>
+      <div class="marker-label">06 — Galaxy Spikes</div>
+    </div>
+
+    <!-- PEINTURE 07 -->
+    <div class="marker" id="marker-6" data-id="6" style="left:2120px;top:60%;">
+      <div class="marker-ring"></div><div class="marker-ring"></div><div class="marker-ring"></div>
+      <div class="marker-dot"></div>
+      <div class="marker-label">07 — Plantprint</div>
+    </div>
+
+    <!-- PEINTURE 08 -->
+    <div class="marker" id="marker-7" data-id="7" style="left:2420px;top:45%;">
+      <div class="marker-ring"></div><div class="marker-ring"></div><div class="marker-ring"></div>
+      <div class="marker-dot"></div>
+      <div class="marker-label">08 — Soft Creatures</div>
+    </div>
+
+    <!-- PEINTURE 09 -->
+    <div class="marker" id="marker-8" data-id="8" style="left:2720px;top:35%;">
+      <div class="marker-ring"></div><div class="marker-ring"></div><div class="marker-ring"></div>
+      <div class="marker-dot"></div>
+      <div class="marker-label">09 — Fear Projection</div>
+    </div>
+
+    <!-- PEINTURE 10 -->
+    <div class="marker" id="marker-9" data-id="9" style="left:3020px;top:62%;">
+      <div class="marker-ring"></div><div class="marker-ring"></div><div class="marker-ring"></div>
+      <div class="marker-dot"></div>
+      <div class="marker-label">10 — Deep Blue</div>
+    </div>
+
+    <!-- PEINTURE 11 -->
+    <div class="marker" id="marker-10" data-id="10" style="left:3320px;top:40%;">
+      <div class="marker-ring"></div><div class="marker-ring"></div><div class="marker-ring"></div>
+      <div class="marker-dot"></div>
+      <div class="marker-label">11 — Harsh Winter</div>
+    </div>
+
+    <!-- PEINTURE 12 -->
+    <div class="marker" id="marker-11" data-id="11" style="left:3620px;top:58%;">
+      <div class="marker-ring"></div><div class="marker-ring"></div><div class="marker-ring"></div>
+      <div class="marker-dot"></div>
+      <div class="marker-label">12 — Withheld</div>
+    </div>
+
+    <!-- PEINTURE 13 -->
+    <div class="marker" id="marker-12" data-id="12" style="left:3920px;top:44%;">
+      <div class="marker-ring"></div><div class="marker-ring"></div><div class="marker-ring"></div>
+      <div class="marker-dot"></div>
+      <div class="marker-label">13 — The Weight of Eyes</div>
+    </div>
+
+    <!-- PEINTURE 14 -->
+    <div class="marker" id="marker-13" data-id="13" style="left:4220px;top:56%;">
+      <div class="marker-ring"></div><div class="marker-ring"></div><div class="marker-ring"></div>
+      <div class="marker-dot"></div>
+      <div class="marker-label">14 — Moss Proliferation</div>
+    </div>
+
+    <!-- PEINTURE 15 -->
+    <div class="marker" id="marker-14" data-id="14" style="left:4520px;top:40%;">
+      <div class="marker-ring"></div><div class="marker-ring"></div><div class="marker-ring"></div>
+      <div class="marker-dot"></div>
+      <div class="marker-label">15 — Hanami</div>
+    </div>
+
+    <!-- PEINTURE 16 -->
+    <div class="marker" id="marker-15" data-id="15" style="left:4820px;top:58%;">
+      <div class="marker-ring"></div><div class="marker-ring"></div><div class="marker-ring"></div>
+      <div class="marker-dot"></div>
+      <div class="marker-label">16 — Drifting Gaze</div>
+    </div>
+
+    <!-- PEINTURE 17 -->
+    <div class="marker" id="marker-16" data-id="16" style="left:5120px;top:44%;">
+      <div class="marker-ring"></div><div class="marker-ring"></div><div class="marker-ring"></div>
+      <div class="marker-dot"></div>
+      <div class="marker-label">17 — Rootless</div>
+    </div>
+
+    <!-- PEINTURE 18 -->
+    <div class="marker" id="marker-17" data-id="17" style="left:5420px;top:52%;">
+      <div class="marker-ring"></div><div class="marker-ring"></div><div class="marker-ring"></div>
+      <div class="marker-dot"></div>
+      <div class="marker-label">18 — Candy Skull</div>
+    </div>
+
+    <!-- PEINTURE 19 -->
+    <div class="marker" id="marker-18" data-id="18" style="left:5720px;top:38%;">
+      <div class="marker-ring"></div><div class="marker-ring"></div><div class="marker-ring"></div>
+      <div class="marker-dot"></div>
+      <div class="marker-label">19 — Smoke Signal</div>
+    </div>
+
+    <!-- PEINTURE 20 -->
+    <div class="marker" id="marker-19" data-id="19" style="left:6020px;top:56%;">
+      <div class="marker-ring"></div><div class="marker-ring"></div><div class="marker-ring"></div>
+      <div class="marker-dot"></div>
+      <div class="marker-label">20 — Été 13</div>
+    </div>
+
+    <!-- PEINTURE 21 -->
+    <div class="marker" id="marker-20" data-id="20" style="left:6320px;top:42%;">
+      <div class="marker-ring"></div><div class="marker-ring"></div><div class="marker-ring"></div>
+      <div class="marker-dot"></div>
+      <div class="marker-label">21 — More Than a Thousand Suns</div>
+    </div>
+
+    <!-- Fin -->
+    <div style="position:absolute;left:7200px;top:50%;transform:translateY(-50%);font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(240,236,228,.15);">— Fin de l'exposition —</div>
+  </div>
+</div>
+
+<div id="hud">
+  <div class="hud-left">
+    <div id="hud-title"></div>
+    <div class="hud-coords" id="hud-coords">48°N 1°W — ALT: 0m</div>
+  </div>
+  <div style="text-align:right;">
+    <div class="hud-left" style="font-size:.5rem;">APERÇU PAINTINGS COLLECTION</div>
+    <div class="hud-coords">21 WORKS — 2025/2026</div>
+  </div>
+</div>
+
+<div id="scroll-hint">
+  <span>Scroll</span>
+  <div class="scroll-arrow"></div>
+</div>
+
+<script>
+var PAINTINGS = [
+  {
+    id: 0,
+    title: 'Melancholy Spikes',
+    year: '2025',
+    medium: 'Acrylique sur toile',
+    dims: '80 × 100 cm',
+    coords: '48.8566°N — 2.3522°E',
+    alt: '312m',
+    description: 'Melancholy has its own shades; rarely black, often cold and shimmering, a buried softness one cannot let go. Only black, white, and their grey nuances. The knife sculpts matter in thickness, building reliefs that play with light and give it an almost mineral depth. The thin, sharp lines piercing the composition are also pulled by knife: precise, inevitable, like thoughts that impose themselves without warning. Each tonal variation, each texture, each line is laid by hand with intention. What resembles spontaneity is entirely controlled. The closer you look, the more the canvas reveals itself. A new reading with every glance. A memory one would love to relive, but that still stings a little.',
+    imgFull:    'assets/paintings/00-melancholy-spikes-full.jpg',
+    imgContext: 'assets/paintings/00-melancholy-spikes-context.jpg',
+    hotspots: [{px:.25,py:.35,sw:.45,sh:.5},{px:.65,py:.25,sw:.45,sh:.45},{px:.45,py:.75,sw:.55,sh:.4}],
+  },
+  {
+    id: 1,
+    title: 'Burning Love',
+    year: '2025',
+    medium: 'Acrylique, couteau, collage sur toile',
+    dims: '80 × 80 cm',
+    coords: '43.2965°N — 5.3698°E',
+    alt: '0m',
+    description: 'Painted right after meeting someone who changed everything. A luminous aura, warm colours: yellow, orange, passionate red, the violet of tenderness. A smell of sunset. The eye at the centre is revealed by masking tape removed after painting, the raw white canvas intact in the middle of the fire. The matter is dense, in relief. The knife creates strata, thicknesses that catch light differently from every angle. Fragments of other canvases are collaged onto the surface, integrated into the colour. What looks like impulse is entirely constructed. Every stroke, every point laid by brush or knife, nothing left to chance. Because every micro-detail placed by hand is a new thing to find. The canvas stays alive as long as there is something left to see. A balcony, a coffee, sunlight on skin, and someone beside you.',
+    imgFull:    'assets/paintings/01-burning-love-full.jpg',
+    imgContext: 'assets/paintings/01-burning-love-full.jpg',
+    hotspots: [{px:.2,py:.3,sw:.38,sh:.45},{px:.72,py:.2,sw:.42,sh:.38},{px:.5,py:.78,sw:.55,sh:.4}],
+  },
+  {
+    id: 2,
+    title: 'Hateful',
+    year: '2025',
+    medium: 'Acrylique, couteau, marqueur sur toile',
+    dims: '120 × 40 cm',
+    coords: '47.2184°N — 1.5536°W',
+    alt: '8m',
+    description: 'Rage does not ask for permission. It builds, compresses, searches for an exit that social conventions and outside gazes deny it. What we feel belongs only to us, but what we can show belongs to others. Panoramic format: the emotion spills horizontally, it does not fit in an ordinary frame. The blood red, dense and in relief on the left, fragments toward the right into smaller shards, like an explosion propagating. Black smothers it in places, white barely breathes between the two. The knife sculpts the acrylic in thickness, creating strata that catch the light like embers. On the right, a horned skull drawn in black paint marker emerges from the mass. One horn spills all the way to the left side, invading the space. Rage that deforms, that grows horns. At the centre-bottom, eyes painted with a brush: the outside gazes, our conventions that force us to hold back from exploding.',
+    imgFull:    'assets/paintings/02-hateful-full.jpg',
+    imgContext: 'assets/paintings/02-hateful-full.jpg',
+    hotspots: [{px:.18,py:.5,sw:.32,sh:.9},{px:.5,py:.5,sw:.32,sh:.9},{px:.82,py:.5,sw:.32,sh:.9}],
+  },
+  {
+    id: 3,
+    title: 'Pollen Reef',
+    year: '2026',
+    medium: 'Acrylique, couteau, scotch de masquage sur toile',
+    dims: '100 × 100 cm',
+    coords: '47.2184°N — 1.5536°W',
+    alt: '-18m',
+    description: 'After the cold, something is reborn. Solar yellow, coral orange, deep burgundy. The palette explodes onto the white canvas like a sudden bloom. A 1m x 1m canvas that gives emotion the space it deserves. The knife works the matter in thickness, building organic reliefs that evoke both coral and pollinated plants, bacterial structures and first buds. A visual symbiosis between the vegetal and the marine. Masking tape defines clean zones, flat areas that contrast with the textured richness of the paint. Stars of fine lines radiate from several points: precise, intentional, like spores propagating. Cigarette smoke in a ray of sunlight, and with it, all those memories that come back at once. Lying in the grass in a t-shirt after a long winter, the softness of feeling skin on your arms when holding hands. The sun erasing goosebumps in a second. Brown eyes turning honey.',
+    imgFull:    'assets/paintings/03-pollen-reef-full.jpg',
+    imgContext: 'assets/paintings/03-pollen-reef-full.jpg',
+    hotspots: [{px:.25,py:.3,sw:.42,sh:.48},{px:.72,py:.25,sw:.42,sh:.48},{px:.5,py:.78,sw:.52,sh:.4}],
+  },
+  {
+    id: 4,
+    title: 'Amethyst Shelter',
+    year: '2026',
+    medium: 'Acrylique, couteau, pinceau sur toile',
+    dims: '46 × 38 cm',
+    coords: '48.1173°N — 1.6778°W',
+    alt: '-30m',
+    description: 'From pale mauve to deep indigo violet, the canvas unfolds the full spectrum of amethyst. The stone that lithotherapy associates with the crown chakra and the third eye, a stone of protection above all else, a shield against the energies that scratch and sting. Crystals grow at the corners of the composition, geodes forming naturally, as if the canvas were mineralising from the inside out. The matter is dense in places, in relief. The textures evoke the striations of a raw cut stone, each layer of paint a stratum, each stratum one more level of protection. At the centre, \'APERCU\' signed in dark violet paint: a calligraphic presence, almost secret. A signature that integrates into the composition rather than dominating it. An identity that does not need to shout to exist. The fine threads that coil are thoughts slowing down. The fan-like bursts at the edges are the natural defences of someone who finally knows how to protect themselves. A safe place. Not closed, protected.',
+    imgFull:    'assets/paintings/04-amethyst-shelter-full.jpg',
+    imgContext: 'assets/paintings/04-amethyst-shelter-full.jpg',
+    hotspots: [{px:.22,py:.28,sw:.42,sh:.42},{px:.72,py:.22,sw:.42,sh:.42},{px:.5,py:.72,sw:.52,sh:.42}],
+  },
+  {
+    id: 5,
+    title: 'Galaxy Spikes',
+    year: '2026',
+    medium: 'Acrylique, couteau, marqueur sur toile',
+    dims: '46 × 38 cm',
+    coords: '47.2184°N — 1.5536°W',
+    alt: '100000m',
+    description: 'Two forces, one canvas. Blue on the left: cold, expanding, the silence of deep space pulling outward. Mauve and rose on the right: warm, dense, matter pressing in on itself before it ignites. Neither wins. Neither stops. The knife builds both in the same gesture, the same thickness, the same conviction. The spikes are not decorations. Each one is a detonation, a creation and a destruction happening at the same instant. Energy released so fast it leaves a mark. The universe does not pause between birth and collapse; the spikes do not pause either. They scatter across the canvas with no hierarchy, no centre, no edge that holds. This is the present tense made visible. Not a moment frozen, but the permanent state of everything: always mid-explosion, always mid-formation, always becoming something it was not a second ago. The equilibrium is not stillness. It is two equal pressures, two temperatures, two directions, locked in permanent negotiation. You are not looking at space. You are looking at the condition of existing.',
+    imgFull:    'assets/paintings/05-galaxy-spikes-full.jpg',
+    imgContext: 'assets/paintings/05-galaxy-spikes-full.jpg',
+    hotspots: [{px:.22,py:.28,sw:.42,sh:.42},{px:.72,py:.22,sw:.42,sh:.42},{px:.5,py:.72,sw:.48,sh:.42}],
+  },
+  {
+    id: 6,
+    title: 'Plantprint',
+    year: '2025',
+    medium: 'Acrylique, couteau, marqueur sur toile',
+    dims: '46 × 38 cm',
+    coords: '47.2184°N — 1.5536°W',
+    alt: '2m',
+    description: 'A cross-section of something alive. The black lines do not draw a plant; they reveal its internal logic, the way cells divide and hold space against each other, each one a boundary and a collaboration at the same time. Mint, jade, sage: greens that belong to living tissue, to chlorophyll, to the quiet chemistry of growth. The upper two-thirds are structural, almost architectural. The marker traces each cell with precision, but the cells themselves are irregular, biological, honest. This is not a diagram. It is closer to a memory of biology, the residue of having once looked at something under glass and felt the strangeness of it. Then look at the bottom. White tried to cover it. Thick, heavy, self-assured white, laid over the yellow and green underneath with the confidence of something that believes it has won. The organic texture underneath refuses the erasure; it pushes through the surface, lifts the white, breaks its flatness from below. You can see the green and yellow still breathing under there, not buried, not gone. Just waiting. This is what nature does. Not dramatically, not in a hurry. A root finds a crack in concrete and widens it over twenty years. A seed germinates in asphalt. Life does not negotiate with what tries to contain it; it simply continues, and containment eventually fails. The painting does not illustrate this. It enacts it. You cannot flatten everything by adding a layer on top. The thing underneath remembers what it was.',
+    imgFull:    'assets/paintings/06-plantprint-full.jpg',
+    imgContext: 'assets/paintings/06-plantprint-full.jpg',
+    hotspots: [{px:.5,py:.88,sw:.75,sh:.22},{px:.18,py:.38,sw:.32,sh:.48},{px:.3,py:.15,sw:.48,sh:.32}],
+  },
+  {
+    id: 7,
+    title: 'Soft Creatures',
+    year: '2026',
+    medium: 'Acrylique, couteau, scotch de masquage, marqueur sur toile',
+    dims: '46 × 38 cm',
+    coords: '47.2184°N — 1.5536°W',
+    alt: '9m',
+    description: 'The white shapes are not empty. They are held, carefully, deliberately, by everything around them. Purple presses in from every side, dense and warm, and the white stays white. Protected. The masking tape pulls back and leaves clean negative shapes breathing inside the density of purple, magenta, bordeaux, lilac. On the right, a spiky skull, one of the recurring characters of this universe, pushes through in red and deep violet. It does not threaten the softness. It belongs to it. Small hearts scattered in the margins, a crowned figure repeated quietly across the surface, never shouting, never asking to be seen first. They are the undercurrent of everything else. The canvas is not about tenderness. It is made of it, woven into the gesture itself, present in every shape that was held back and every mark that was placed with care. The kind of tenderness that does not announce itself. That simply is.',
+    hotspots: [{px:.25,py:.3,sw:.45,sh:.5},{px:.72,py:.28,sw:.45,sh:.5},{px:.25,py:.75,sw:.45,sh:.45}],
+    imgFull:    'assets/paintings/07-soft-creatures-full.jpg',
+    imgContext: 'assets/paintings/07-soft-creatures-full.jpg',
+  },
+  {
+    id: 8,
+    title: 'Fear Projection',
+    year: '2026',
+    medium: 'Acrylique, couteau, scotch de masquage, collage, strass sur toile',
+    dims: '46 × 38 cm',
+    coords: '47.2184°N — 1.5536°W',
+    alt: '6m',
+    description: 'The background is not black. It is a skull, massive, pushing beyond the edges of the frame, too large to be contained. Most of what you read as darkness is its presence. It was always there. A crystal strass pressed into one tooth, precise and deliberate, a detail you have to get close to find. In front of it, another skull built from masking tape itself — the tape is the material, the structure, the relief. Translucent, almost like a shed skin, a shell that became too small to contain a mind expanding in every direction. It does not hold the pain. It was left behind by it. From the eyes of the background skull, white matter pours out. The knife drags it downward, heavy and slow, spilling across the black like something that could not be held in anymore. Anxiety made physical. The kind that does not stay where it belongs. Collaged in the margins, hand-drawn scenarios. Hypothetical situations, fears that have not happened yet, conversations rehearsed for audiences that may never exist. The paranoia of being perceived. Pages torn from the internal monologue and glued directly onto the surface, because there was nowhere else to put them. This is what it looks like when the mind burns from the inside. Not loud. Not dramatic. Just the weight of a future that has not happened yet, pressing down on the present like it already has.',
+    hotspots: [{px:.65,py:.28,sw:.55,sh:.5},{px:.18,py:.22,sw:.32,sh:.38},{px:.5,py:.75,sw:.75,sh:.45}],
+    imgFull:    'assets/paintings/08-fear-projection-full.jpg',
+    imgContext: 'assets/paintings/08-fear-projection-full.jpg',
+  },
+  {
+    id: 9,
+    title: 'Deep Blue',
+    year: '2026',
+    medium: 'Acrylique, couteau, pinceau, marqueur sur toile',
+    dims: '46 × 38 cm',
+    coords: '47.2184°N — 1.5536°W',
+    alt: '-3800m',
+    description: 'Water does not hold a single colour. It holds depth, and depth changes everything. The pale blue at the surface where light still reaches, and the electric indigo below where it stops. Both present at once, both true, both the same body of water seen from different distances. This is what sound looks like when it moves through water. Cymatics, the science of vibration made visible, produces patterns exactly like these: organic, symmetrical without being geometric, alive without being planned. The brush and the knife do not invent the shapes. They find them, the way water finds them when a frequency passes through it.',
+    hotspots: [{px:.25,py:.28,sw:.45,sh:.5},{px:.72,py:.25,sw:.45,sh:.5},{px:.5,py:.75,sw:.75,sh:.45}],
+    imgFull:    'assets/paintings/09-deep-blue-full.jpg',
+    imgContext: 'assets/paintings/09-deep-blue-full.jpg',
+  },
+  {
+    id: 10,
+    title: 'Harsh Winter',
+    year: '2026',
+    medium: 'Acrylique, couteau, scotch de masquage, marqueur sur toile',
+    dims: '100 × 140 cm',
+    coords: '47.2184°N — 1.5536°W',
+    alt: '2400m',
+    description: 'White is not the absence here. It is the structure. Everything blue is held inside it, framed by it, cut into shape by it. The masking tape does not decorate the surface; it organises it. Broad clean bands radiate outward like rays from a hidden source, splitting the canvas into two registers, upper and lower, each a burst of cold matter caught mid-movement. Between them, a horizontal white break, like a horizon, or a held breath. The blues run the full cold spectrum: glacial cyan where the light still reaches, electric cobalt deeper in, near-black indigo where it stops. The knife and brush work the paint into frost, into fracture, into something less painted than crystallised. Fine black lines pierce the composition from several points, pulled sharp and radiating, the exact geometry of glass the instant before it shatters. Not decoration. Detonations. Each one a small cold explosion frozen at its peak. This is winter as a restless thing, not a still one. Something tried to spread, to reach outward in every direction, and the cold caught it before it arrived. The white did not erase the blue. It held it in place, gave it edges, decided where it was allowed to breathe. What reads as stillness is two pressures locked together: the blue pushing out, the white holding it back. Look long enough and the freeze stops looking like an ending. It looks like a pause. Everything cold is still there, still radiating, still mid-movement, just waiting for the temperature to change.',
+    hotspots: [{px:.28,py:.30,sw:.42,sh:.34},{px:.68,py:.30,sw:.42,sh:.34},{px:.5,py:.74,sw:.7,sh:.34}],
+    imgFull:    'assets/paintings/10-harsh-winter-full.jpg',
+    imgContext: 'assets/paintings/10-harsh-winter-full.jpg',
+  },
+  {
+    id: 11,
+    title: 'Withheld',
+    year: '2026',
+    medium: 'Acrylique, couteau, scotch de masquage sur toile',
+    dims: '46 × 38 cm',
+    coords: '47.2184°N — 1.5536°W',
+    alt: '7m',
+    description: 'The heat did not disappear. It was covered. What you see is only what the tape let through. Horizontal bands of masking tape cross the canvas edge to edge, laid down before the paint and pulled away after. Between them, warmth survives in fragments: solar yellow, coral orange, deep blood red, thrown down fast and caught in the narrow gaps the tape left open. The knife works the paint into these channels, building small reliefs, spatters, granular bursts that scatter and fade toward the edges like heat losing its grip. Everywhere else, the white returns, clean and flat and total, the exact negative of everything that was withheld. What reads as emptiness is not absence. It is the shape of what was taken away. This is fire seen through a shutter. Something burned underneath, whole and continuous, and the tape decided how much of it could be seen. The bands do not organise the heat; they ration it. And yet the fragments still reach for each other across the white, red answering red, yellow bleeding toward yellow, as if the fire were trying to reassemble itself through the gaps. Strip the white away and the whole canvas would ignite. It is all still there, held just out of sight, waiting for someone to pull the tape.',
+    hotspots: [{px:.24,py:.30,sw:.40,sh:.40},{px:.74,py:.32,sw:.40,sh:.40},{px:.5,py:.78,sw:.6,sh:.34}],
+    imgFull:    'assets/paintings/11-withheld-full.jpg',
+    imgContext: 'assets/paintings/11-withheld-full.jpg',
+  },
+  {
+    id: 12,
+    title: 'The Weight of Eyes',
+    year: '2026',
+    medium: 'Acrylique, pinceau, marqueur sur toile',
+    dims: '46 × 38 cm',
+    coords: '47.2184°N — 1.5536°W',
+    alt: '11m',
+    description: 'This is not a face. It is the feeling of being looked at, painted from the inside. No colour survives here, and that is the point: stripped to black and white, nothing is left but contrast and the eye. And the eyes are everywhere. Great black ovals ringed in white stare up from the lower edge, heavy-lidded, half-closed, watching without urgency. Smaller eyes scatter across the whole surface, each drawn with a burst of radiating lashes, a stylised mark repeated until it becomes a pressure rather than an image. Massive black totemic figures anchor the left, brushed thick and flat. At the centre, a dense cluster of white dots swarms across the black, granular and restless, a single eye that has splintered into a hundred smaller ones. The marker cuts the fine detail; the brush lays the heavy dark. Between them the white canvas breathes, but it never rests. Something is always looking back. This is what it feels like when the gaze of others stops being something outside you and starts living in your own head. The eyes multiply because the fear multiplies them. Each one is a version of the same thought: that you are being watched, weighed, read, and found wanting. There is no single watcher to face down, no way to turn and meet them all. Under enough of them, a person starts to come apart, to scatter like the dots at the centre, to feel less like one self and more like a surface being observed from every side. The painting does not describe this from a safe distance. It puts you inside it, in the one place where the eyes are loudest, and holds you there.',
+    hotspots: [{px:.68,py:.66,sw:.5,sh:.42},{px:.4,py:.48,sw:.42,sh:.42},{px:.16,py:.62,sw:.34,sh:.5}],
+    imgFull:    'assets/paintings/12-the-weight-of-eyes-full.jpg',
+    imgContext: 'assets/paintings/12-the-weight-of-eyes-full.jpg',
+  },
+  {
+    id: 13,
+    title: 'Moss Proliferation',
+    year: '2026',
+    medium: 'Acrylique, couteau, pinceau sur toile',
+    dims: '30 × 40 cm',
+    coords: '47.2184°N — 1.5536°W',
+    alt: '1m',
+    description: 'This is not a landscape. It is a culture, caught in the act of spreading, and it is looking back. The white is not empty here; it is the medium, the sterile field a living thing colonises. From the left, green erupts and radiates outward, thrown in projections that reach across the surface like a colony claiming ground it did not have a moment ago. The greens run the full living spectrum: acid lime, moss, jade, sage, the exact chemistry of chlorophyll and growth, shot through with the yellow of spores about to release. At the centre, the surface breaks into a bed of droplets and dots, black and gold and green, a Petri dish seen too close, each mark a colony, a spore, a cell dividing on its own schedule. The knife scrapes the paint into granular texture; the brush pulls it into the radiating strokes that fan toward the edges like hyphae searching for more surface. And set into the green, eyes: heavy-lidded ovals brushed open in the colony, one to the right, one below, watching from inside the growth itself. This is life at the scale we forget to look at. Not the forest, but the thing that builds the forest, quietly, without permission, in the damp and the dark and the overlooked corners. Moss does not decide to spread; it simply does, wherever the conditions allow. But here it has grown eyes, and the process stops being neutral. The thing you are observing under glass is observing you in return. Left alone, it would take the whole canvas, the whole wall, the whole room. What reads as decoration is a process paused mid-bloom. Version 1.0, the label says, as if this were only the first run of an experiment that intends to keep going, and to keep watching while it does.',
+    hotspots: [{px:.66,py:.42,sw:.4,sh:.4},{px:.28,py:.5,sw:.4,sh:.44},{px:.3,py:.78,sw:.42,sh:.4}],
+    imgFull:    'assets/paintings/13-moss-proliferation-full.jpg',
+    imgContext: 'assets/paintings/13-moss-proliferation-full.jpg',
+  },
+  {
+    id: 14,
+    title: 'Hanami',
+    year: '2026',
+    medium: 'Acrylique, couteau, pinceau sur toile — triptyque',
+    dims: '3 × 40 × 40 cm',
+    coords: '47.2184°N — 1.5536°W',
+    alt: '12m',
+    description: 'Three panels, read from top to bottom, like petals falling through the frame. This is the first work in the collection built across three canvases, and the division matters: the bloom does not stay contained. It begins in the upper panel as a burst, dense clusters of pink thrown against white, spatters of blood red caught in the softness like the last of the colour before it fades. It spills through the gap into the second panel, thinning, scattering, the fine lines pulling outward into branches and stems and the trajectories of petals in wind. By the third, it has almost dissolved: pale washes, a single deep red bloom low on the left, threads of magenta trailing off the edge like the final drift of a tree letting go. The knife lays the soft mass; the brush pulls the thin radiating lines, the spikes turned tender here, become twigs, filaments, the architecture of a bonsai rather than an explosion. And in the white, barely there, small eyes rest half-closed in reserve, watching the fall without disturbing it. Hanami is the act of stopping to look at the blossom, and it exists only because the blossom will not last. Sakura is beautiful because it is already leaving. The tree draws its quiet crowd every year for a reason no one quite says out loud: the flower is at its most alive in the moment it lets go, and the falling is the point, not the bloom. The petals mean the most as they detach. The triptych holds that across three frames, not to stop it, but to let it fall slowly enough to be seen: the bloom, the drift, the quiet after. What reaches the bottom panel is not loss. It is what beauty leaves behind when it is done being at its peak, the proof that something was fully alive precisely because it did not stay.',
+    hotspots: [{px:.45,py:.17,sw:.7,sh:.26},{px:.45,py:.5,sw:.7,sh:.26},{px:.45,py:.82,sw:.7,sh:.26}],
+    imgFull:    'assets/paintings/14-hanami-full.jpg',
+    imgContext: 'assets/paintings/14-hanami-full.jpg',
+  },
+  {
+    id: 15,
+    title: 'Drifting Gaze',
+    year: '2026',
+    medium: 'Acrylique, couteau, pinceau sur toile',
+    dims: '46 × 38 cm',
+    coords: '47.2184°N — 1.5536°W',
+    alt: '8848m',
+    description: 'This is what it feels like to get lost in the sky. Not the panic of being watched, but its opposite: the moment the gaze stops being aimed at you and starts to wander, unweighted, indifferent to whether it lands. The eyes are still here, but they have let go. They drift the way attention drifts when a person finally stops guarding themselves, when the sky is wide enough that being seen no longer costs anything. But look long enough and the sky gives the eyes back. Scattered across all that blue, they are not watching from the outside; they are your own gaze, returned. The open field becomes a mirror, and getting lost in it turns quietly into looking inward. What reads as emptiness is room to drift, and then to see yourself drifting. The thing looking back was you all along.',
+    hotspots: [{px:.5,py:.68,sw:.5,sh:.32},{px:.26,py:.24,sw:.42,sh:.34},{px:.74,py:.19,sw:.42,sh:.26}],
+    imgFull:    'assets/paintings/15-drifting-gaze-full.jpg',
+    imgContext: 'assets/paintings/15-drifting-gaze-full.jpg',
+  },
+  {
+    id: 16,
+    title: 'Rootless',
+    year: '2026',
+    medium: 'Acrylique, couteau, pinceau sur skateboards — triptyque',
+    dims: '3 × 80 × 21 cm',
+    coords: '47.2184°N — 1.5536°W',
+    alt: '-4m',
+    description: 'This is a network seen from below, at the scale we never live at. Three boards stand side by side, and the green moves across all of them, threading from one to the next as if the surface between were no barrier at all. Pale filaments spread and branch, acid green fading into white, drawn thin by the knife and scattered into fine spores of darker green that settle like punctuation. Nothing here is dense the way moss is dense; this is the quieter cousin, the growth that happens underground, filament by filament, in the dark, without witnesses. It reads at once as two things the eye cannot decide between: a galaxy proliferating across empty space, and mycelium spreading beneath a forest floor. The same branching structure builds both, the very large and the very small, and the painting sits exactly where they rub against each other. The gaps between the boards are part of it: the network does not stop, it simply goes back under, out of sight, and surfaces again on the next panel. Rootless is the state of the thing that connects everything and holds onto nothing. Mycelium has no roots; it is the web that links the trees, feeds them, carries their signals, an entire conversation the forest is having in a language no one above ground can hear. It belongs nowhere and reaches everywhere. There is something exquisite in that: a composition of enormous reach, built patiently in the dark, that almost no one will ever see. The triptych brings it up to eye level for a moment, the hidden made briefly visible, before it slips back under where it lives.',
+    hotspots: [{px:.17,py:.5,sw:.3,sh:.78},{px:.5,py:.5,sw:.3,sh:.78},{px:.83,py:.5,sw:.3,sh:.78}],
+    imgFull:    'assets/paintings/16-rootless-full.jpg',
+    imgContext: 'assets/paintings/16-rootless-full.jpg',
+  },
+  {
+    id: 17,
+    title: 'Candy Skull',
+    year: '2026',
+    medium: 'Acrylique, couteau, strass sur toile',
+    dims: '46 × 38 cm',
+    coords: '47.2184°N — 1.5536°W',
+    alt: '5m',
+    description: 'Do not overthink this one. It is candy. The form sits alone in the white like a sweet dropped on a clean counter, pink and glossy and asking to be picked up. Bubble-gum rose, magenta and sugar-white, marbled together by the knife into something soft and sticky-looking. The spikes are still the signature shape, but here they are playful more than sharp: the points of a party star, a burst of sherbet. Pressed into the matter, tiny strass catch the light, half-buried like sugar crystals on a gummy sweet. A few crumbs have scattered to the corners, little pieces that broke off the treat. It is girly on purpose. It is sweet on purpose.',
+    hotspots: [{px:.5,py:.45,sw:.36,sh:.42},{px:.32,py:.32,sw:.28,sh:.3},{px:.68,py:.9,sw:.3,sh:.18}],
+    imgFull:    'assets/paintings/17-candy-skull-full.jpg',
+    imgContext: 'assets/paintings/17-candy-skull-full.jpg',
+  },
+  {
+    id: 18,
+    title: 'Smoke Signal',
+    year: '2026',
+    medium: 'Acrylique, couteau, pinceau sur planche de skateboard',
+    dims: '80 × 21 cm',
+    coords: '47.2184°N — 1.5536°W',
+    alt: '120m',
+    description: 'It looks like a living landscape until you realise the thing rising through the middle is not growing. It is leaving. Green holds at the edges, still whole, still alive. But the centre has turned to smoke, grey and slow, curling upward from something that has already caught. The knife pulls the movement without ever naming the fire; the black threads through like scorch working from the inside. This is damage in its quiet form, the kind that rises softly enough to ignore until there is nothing left to ignore. The eyes scattered through the grey are the sweetness in it, and the helplessness. They watch, they care, they do nothing. They are us: present at the loss, aware of it, unable or unwilling to move. Beauty does not save itself, and being watched has never kept anything from disappearing. What looks like a peaceful green world is a signal going up, asking to be read while there is still someone left to read it.',
+    hotspots: [{px:.5,py:.12,sw:.9,sh:.14},{px:.5,py:.45,sw:.9,sh:.18},{px:.28,py:.62,sw:.5,sh:.14}],
+    imgFull:    'assets/paintings/18-smoke-signal-full.jpg',
+    imgContext: 'assets/paintings/18-smoke-signal-full.jpg',
+  },
+  {
+    id: 19,
+    title: 'Été 13',
+    year: '2026',
+    medium: 'Acrylique, couteau, marqueur sur toile',
+    dims: '40 × 30 cm',
+    coords: '43.5283°N — 5.4497°E',
+    alt: '340m',
+    description: 'The heat comes back first, before any image does. Then the yellow arrives, and you are there again. Everything burns at its warmest here: saturated yellow, deep orange, streaks of red pushed through by the knife, the colour of fields cooked dry by a sun that does not let up. The white of the canvas breaks through only in patches, like sky bleached pale by the middle of the day. Radiating suns bloom across the surface in dark red, scattered like seed heads gone to dryness, like dandelions past their bloom in the heat. And along the edges, fine wrought iron arabesques curl inward, the ornament of old railings and shutters, the patterned metal of a house that holds a summer inside it. This is not a landscape so much as a temperature, the particular weight of light in the south when the afternoon refuses to end. This is childhood remembered as heat. Not a specific afternoon but all of them at once, compressed into one field that shimmers and will not cool. The south of France does this to a memory: it keeps it warm, keeps it yellow, keeps it loud with cicadas you cannot hear but somehow still do. The arabesques hold it in place like a frame around something you are not sure was ever real, or was only ever this bright. What reads as a burning field is really a season that never quite left, still radiating, years later, every time the light turns gold.',
+    hotspots: [{px:.38,py:.18,sw:.3,sh:.34},{px:.12,py:.28,sw:.22,sh:.3},{px:.22,py:.9,sw:.4,sh:.16}],
+    imgFull:    'assets/paintings/19-ete-13-full.jpg',
+    imgContext: 'assets/paintings/19-ete-13-full.jpg',
+  },
+  {
+    id: 20,
+    title: 'More Than a Thousand Suns',
+    year: '2026',
+    medium: 'Acrylique, couteau, pinceau, marqueur sur toile',
+    dims: '30 × 40 cm',
+    coords: '47.2184°N — 1.5536°W',
+    alt: '180m',
+    description: 'A sentence sits in the corner of this one, small and certain: she is prettier than a hundred thousand sunsets. Everything else on the canvas is the attempt to prove it. The whole surface burns in the colours of dusk pushed past its limit: molten yellow, orange, red bleeding down in long vertical runs, the sky at the exact minute it gives everything it has before the dark. White smoke curls up through the heat, soft and slow, and pale drops fall like light coming apart. Scattered across the warm field, small eyes with radiating lashes look out from everywhere, the same recurring gaze, turned here toward the thing worth looking at. The knife drags the colour into streaks and reflections, a horizon caught on water, a sun that will not finish setting. This is not a comparison made to impress; it is one that feels simply true. A sunset is the highest thing most people reach for, and here it does not come close: it takes a hundred thousand of them, and they still lose. The painting does not try to show her. It shows the sky she outshines, the whole burning horizon offered up as the one that came second. What looks like a landscape on fire is the quiet certainty underneath the feeling: that everything bright the world can put in front of you is still not the brightest thing you have seen.',
+    hotspots: [{px:.82,py:.64,sw:.3,sh:.2},{px:.18,py:.35,sw:.32,sh:.34},{px:.55,py:.12,sw:.5,sh:.2}],
+    imgFull:    'assets/paintings/20-more-than-a-thousand-suns-full.jpg',
+    imgContext: 'assets/paintings/20-more-than-a-thousand-suns-full.jpg',
+  }
+];
+
+// ── Canvas topographique ──────────────────────────────────
+var topoC = document.getElementById('topo-canvas');
+var topoCtx = topoC.getContext('2d');
+var topoVW = 0, topoVH = 0, topoTW = 0;
+
+var TOPO_CENTERS = [
+  {x:.04, y:.50, rx:.22, ry:.18, n:8},
+  {x:.09, y:.30, rx:.18, ry:.14, n:6},
+  {x:.12, y:.68, rx:.20, ry:.16, n:7},
+  {x:.17, y:.45, rx:.26, ry:.20, n:9},
+  {x:.20, y:.22, rx:.16, ry:.13, n:5},
+  {x:.23, y:.62, rx:.19, ry:.15, n:7},
+  {x:.27, y:.38, rx:.22, ry:.17, n:8},
+  {x:.30, y:.75, rx:.17, ry:.13, n:6},
+  {x:.33, y:.52, rx:.24, ry:.19, n:9},
+  {x:.36, y:.28, rx:.20, ry:.16, n:7},
+  {x:.39, y:.65, rx:.18, ry:.14, n:6},
+  {x:.42, y:.42, rx:.23, ry:.18, n:8},
+  {x:.45, y:.20, rx:.17, ry:.13, n:5},
+  {x:.47, y:.58, rx:.21, ry:.17, n:7},
+  {x:.50, y:.35, rx:.25, ry:.20, n:9},
+  {x:.53, y:.72, rx:.19, ry:.15, n:6},
+  {x:.56, y:.48, rx:.22, ry:.17, n:8},
+  {x:.59, y:.25, rx:.18, ry:.14, n:6},
+  {x:.62, y:.62, rx:.20, ry:.16, n:7},
+  {x:.65, y:.40, rx:.24, ry:.19, n:9},
+  {x:.68, y:.75, rx:.17, ry:.13, n:5},
+  {x:.71, y:.55, rx:.21, ry:.17, n:7},
+  {x:.74, y:.30, rx:.19, ry:.15, n:6},
+  {x:.77, y:.68, rx:.23, ry:.18, n:8},
+  {x:.80, y:.45, rx:.20, ry:.16, n:7},
+  {x:.83, y:.22, rx:.17, ry:.13, n:5},
+  {x:.86, y:.60, rx:.22, ry:.17, n:8},
+  {x:.89, y:.38, rx:.25, ry:.20, n:9},
+  {x:.92, y:.72, rx:.18, ry:.14, n:6},
+  {x:.95, y:.50, rx:.20, ry:.16, n:7},
+  {x:.98, y:.32, rx:.17, ry:.13, n:5},
+];
+
+var TRACK_TOTAL = 7700;
+
+function resizeTopo(){
+  topoVW = window.innerWidth;
+  topoVH = topoC.height = window.innerHeight;
+  topoTW = topoC.width  = TRACK_TOTAL + topoVW;
+}
+resizeTopo();
+window.addEventListener('resize', function(){
+  resizeTopo();
+  // Re-borner le scroll : innerWidth a change, donc getMaxScroll aussi.
+  // Sans cela, la scene peut rester decalee au-dela de sa nouvelle limite.
+  targetScrollX = Math.max(0, Math.min(getMaxScroll(), targetScrollX));
+  scrollX = Math.max(0, Math.min(getMaxScroll(), scrollX));
+});
+
+function drawTopo(offsetX){
+  topoCtx.clearRect(0, 0, topoTW, topoVH);
+  TOPO_CENTERS.forEach(function(c){
+    var cx = c.x * TRACK_TOTAL;
+    var cy = c.y * topoVH;
+    for(var i=1; i<=c.n; i++){
+      var t = i/c.n;
+      var rx2 = c.rx * topoVW * t;
+      var ry2 = c.ry * topoVH * t;
+      topoCtx.beginPath();
+      for(var s=0; s<=80; s++){
+        var angle = (s/80) * Math.PI * 2;
+        var perturb = 1 + 0.06*Math.sin(angle*3+i) + 0.03*Math.sin(angle*7+c.x*10);
+        var px = cx + Math.cos(angle)*rx2*perturb;
+        var py = cy + Math.sin(angle)*ry2*perturb;
+        s===0 ? topoCtx.moveTo(px,py) : topoCtx.lineTo(px,py);
+      }
+      topoCtx.closePath();
+      topoCtx.strokeStyle = 'rgba(240,236,228,'+(0.12+(1-t)*0.1)+')';
+      topoCtx.lineWidth = 0.5;
+      topoCtx.stroke();
+    }
+    topoCtx.beginPath();
+    topoCtx.arc(cx,cy,2,0,Math.PI*2);
+    topoCtx.fillStyle='rgba(240,236,228,.4)';
+    topoCtx.fill();
+  });
+  topoCtx.strokeStyle='rgba(240,236,228,.04)';
+  topoCtx.lineWidth=0.5;
+  for(var x=0;x<topoTW+80;x+=80){topoCtx.beginPath();topoCtx.moveTo(x,0);topoCtx.lineTo(x,topoVH);topoCtx.stroke();}
+  for(var y=0;y<topoVH+80;y+=80){topoCtx.beginPath();topoCtx.moveTo(0,y);topoCtx.lineTo(topoTW,y);topoCtx.stroke();}
+  topoC.style.transform = 'translateX(-'+offsetX+'px)';
+}
+
+// ── Curseur ──────────────────────────────────────────────
+var cur  = document.getElementById('cur');
+var ring = document.getElementById('ring');
+var mx=0, my=0, rx=0, ry=0;
+document.addEventListener('mousemove',function(e){
+  mx=e.clientX; my=e.clientY;
+  cur.style.left=mx+'px'; cur.style.top=my+'px';
+});
+(function loopCur(){
+  requestAnimationFrame(loopCur);
+  rx+=(mx-rx)*.2; ry+=(my-ry)*.2;
+  ring.style.left=rx+'px'; ring.style.top=ry+'px';
+})();
+
+// ── Intro ─────────────────────────────────────────────────
+var intro = document.getElementById('intro');
+setTimeout(function(){
+  intro.classList.add('out');
+  setTimeout(function(){ intro.style.display='none'; }, 900);
+}, 2800);
+
+// ── Scroll horizontal ─────────────────────────────────────
+var track = document.getElementById('track');
+var scrollX = 0, targetScrollX = 0;
+var maxScroll = 0;
+function getMaxScroll(){ return Math.max(0, 7700 - window.innerWidth); }
+window.addEventListener('wheel',function(e){
+  e.preventDefault();
+  targetScrollX += e.deltaY*1.2 + e.deltaX*1.2;
+  targetScrollX = Math.max(0,Math.min(getMaxScroll(),targetScrollX));
+},{passive:false});
+var touchStartX=0;
+window.addEventListener('touchstart',function(e){ touchStartX=e.touches[0].clientX; },{passive:true});
+window.addEventListener('touchmove',function(e){
+  var dx = touchStartX - e.touches[0].clientX;
+  touchStartX = e.touches[0].clientX;
+  targetScrollX += dx*1.5;
+  targetScrollX = Math.max(0,Math.min(getMaxScroll(),targetScrollX));
+},{passive:true});
+
+// ── Fenêtres Windows ──────────────────────────────────────
+var activeMarker = null;
+var windows = {};
+var linesSvg = document.getElementById('lines-svg');
+var hotspotEls = [];
+var detailWindows = {};
+
+function createWindow(painting, anchorEl, type, offsetX, offsetY, imgSrc, winTitle){
+  var win = document.createElement('div');
+  win.className = 'win';
+  win.dataset.paintingId = painting.id;
+  win.dataset.type = type;
+  var imgW = type==='full' ? 300 : 162;
+  var clipH = type==='detail' ? 160 : null;
+  var bodyStyle = clipH ? 'style="height:'+clipH+'px;overflow:hidden;position:relative;"' : '';
+  var imgStyle  = clipH ? 'style="width:100%;height:auto;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);min-height:100%;min-width:100%;object-fit:cover;"' : 'style="width:100%;height:auto;display:block;"';
+  win.innerHTML =
+    '<div class="win-titlebar">'+
+      '<span class="win-title">'+winTitle+'</span>'+
+      '<div class="win-btns">'+
+        '<div class="win-btn win-btn-expand"></div>'+
+        '<div class="win-btn win-btn-next"></div>'+
+        '<div class="win-btn win-btn-close"></div>'+
+      '</div>'+
+    '</div>'+
+    '<div class="win-body" '+bodyStyle+'><img src="'+imgSrc+'" loading="eager" crossorigin="anonymous" alt="'+painting.title.replace(/"/g,'')+'" '+imgStyle+'></div>'+
+    '<div class="win-footer"><span>'+painting.title+'</span><span>'+(type==='full'?painting.dims:type==='context'?painting.medium:'Détail')+'</span></div>'+
+    (type==='full' && painting.description ? '<div class="win-desc">'+painting.description+'</div>' : '');
+
+  var ar = anchorEl.getBoundingClientRect();
+  var ax = ar.left + ar.width/2, ay = ar.top + ar.height/2;
+  var wx = ax + offsetX, wy = ay + offsetY;
+  wx = Math.max(10, Math.min(window.innerWidth - imgW - 20, wx));
+  wy = Math.max(60, Math.min(window.innerHeight - 200, wy));
+  win.style.left = wx+'px'; win.style.top = wy+'px'; win.style.width = (imgW+2)+'px';
+  document.body.appendChild(win);
+  win.classList.add('visible');
+
+  // Adaptation verticale des fenetres 'full'.
+  // Objectif : la fenetre entiere (titlebar + image + footer + description)
+  // ne doit JAMAIS depasser l'ecran ni chevaucher le HUD.
+  // Strategie en deux temps :
+  //  1) on reduit la largeur pour tenter de faire tenir toute l'image,
+  //  2) si l'image reste trop haute (triptyque type Hanami), on borne la
+  //     hauteur de la fenetre et on rend le corps-image defilable, pour que
+  //     footer + description restent toujours visibles a leur place.
+  if(type==='full'){
+    var imgEl = win.querySelector('.win-body img');
+    var bodyEl = win.querySelector('.win-body');
+    var fitWindow = function(){
+      if(!imgEl.naturalWidth) return;
+      var topMargin = 60;                       // sous la nav
+      var botMargin = 64;                       // au-dessus du HUD
+      var avail  = window.innerHeight - topMargin - botMargin;
+      var ratio  = imgEl.naturalWidth / imgEl.naturalHeight;
+      var tb = win.querySelector('.win-titlebar');
+      var ft = win.querySelector('.win-footer');
+      var dc = win.querySelector('.win-desc');
+      var chrome = (tb?tb.getBoundingClientRect().height:0)
+                 + (ft?ft.getBoundingClientRect().height:0)
+                 + (dc?dc.getBoundingClientRect().height:0);
+      // Reset d'un eventuel etat precedent
+      bodyEl.style.height = ''; bodyEl.style.overflowY = '';
+      // 1) tenter de tout faire tenir en reduisant la largeur
+      var maxImgH = Math.max(80, avail - chrome);
+      var idealW  = Math.floor(maxImgH * ratio);
+      var newImgW = Math.max(140, Math.min(imgW, idealW));
+      win.style.width = (newImgW + 2) + 'px';
+      // 2) recalcul apres application de la largeur
+      var curImgW = newImgW;
+      var curImgH = curImgW / ratio;
+      if(chrome + curImgH > avail){
+        // Cas extreme : l'image ne tient pas meme a largeur mini.
+        // On borne la hauteur du corps-image et on le rend defilable.
+        var bodyH = Math.max(120, avail - chrome);
+        bodyEl.style.height = bodyH + 'px';
+        bodyEl.style.overflowY = 'auto';
+        bodyEl.style.overscrollBehavior = 'contain';
+      }
+      // Repositionnement : garantir que la fenetre reste dans l'ecran,
+      // entre la nav (haut) et le HUD (bas).
+      var r  = win.getBoundingClientRect();
+      var ny = Math.min(parseFloat(win.style.top), window.innerHeight - r.height - botMargin);
+      ny = Math.max(topMargin, ny);
+      var nx = Math.min(parseFloat(win.style.left), window.innerWidth - r.width - 10);
+      nx = Math.max(10, nx);
+      win.style.top = ny + 'px'; win.style.left = nx + 'px';
+    };
+    var runFit = function(){ fitWindow(); requestAnimationFrame(fitWindow); };
+    if(imgEl.complete && imgEl.naturalWidth>0){ runFit(); }
+    else { imgEl.addEventListener('load', runFit); }
+  }
+
+  // Stopper scroll sur la fenêtre
+  win.addEventListener('wheel',function(e){ e.stopPropagation(); },{passive:true});
+
+  // Ligne SVG
+  var line = document.createElementNS('http://www.w3.org/2000/svg','line');
+  line.setAttribute('stroke','rgba(240,236,228,0.2)');
+  line.setAttribute('stroke-width','0.7');
+  line.setAttribute('stroke-dasharray','3 6');
+  linesSvg.appendChild(line);
+  function updateLine(){
+    var wr = win.getBoundingClientRect();
+    line.setAttribute('x1',ax.toFixed(1)); line.setAttribute('y1',ay.toFixed(1));
+    line.setAttribute('x2',(wr.left+wr.width/2).toFixed(1)); line.setAttribute('y2',wr.top.toFixed(1));
+  }
+  updateLine();
+
+  // Bouton fermer
+  win.querySelector('.win-btn-close').addEventListener('click',function(e){
+    e.stopPropagation();
+    if(type==='full'){ hidePainting(); }
+    else if(type==='detail'){
+      Object.keys(detailWindows).forEach(function(k){ if(detailWindows[k]&&detailWindows[k].el===win) hideDetail(parseInt(k)); });
+    } else {
+      win.classList.remove('visible');
+      if(line&&line.parentNode) line.parentNode.removeChild(line);
+      setTimeout(function(){ if(win.parentNode) win.parentNode.removeChild(win); },280);
+      if(windows[painting.id]) windows[painting.id]=windows[painting.id].filter(function(w2){return w2.el!==win;});
+    }
+  });
+  // Bouton expand — agrandit, centre, contraint dans l'écran
+  var isExp = false;
+  var savedLeft, savedTop, savedWidth;
+  win.querySelector('.win-btn-expand').addEventListener('click', function(e){
+    e.stopPropagation();
+    isExp = !isExp;
+    if(isExp){
+      var r = win.getBoundingClientRect();
+      savedLeft  = r.left;
+      savedTop   = r.top;
+      savedWidth = r.width;
+
+      var maxW = Math.floor(window.innerWidth  * 0.84);
+      var maxH = Math.floor(window.innerHeight * 0.84);
+      var cx   = Math.floor((window.innerWidth  - maxW) / 2);
+      var cy   = Math.floor((window.innerHeight - maxH) / 2);
+      cy = Math.max(60, cy);
+
+      win.style.width    = maxW + 'px';
+      win.style.left     = cx + 'px';
+      win.style.top      = cy + 'px';
+      win.style.zIndex   = '300';
+      win.style.maxHeight = maxH + 'px';
+      win.style.overflow  = 'hidden';
+
+      // Contraindre l'image dans la hauteur restante
+      var img2  = win.querySelector('.win-body img');
+      var body2 = win.querySelector('.win-body');
+      if(img2 && body2){
+        var usedH = 54;
+        body2.style.height   = (maxH - usedH) + 'px';
+        body2.style.overflow = 'hidden';
+        img2.style.width     = '100%';
+        img2.style.height    = '100%';
+        img2.style.objectFit = 'contain';
+      }
+
+      // Zoom scroll + drag dans le cadre
+      var scale = 1, minScale = 1, maxScale = 2.5;
+      var panX = 0, panY = 0;
+      var isDrag = false, dragStartX, dragStartY, panStartX, panStartY;
+
+      function clampPan(){
+        if(!img2 || !body2) return;
+        var bw = body2.offsetWidth,  bh = body2.offsetHeight;
+        var maxPanX = (bw  * (scale - 1)) / 2;
+        var maxPanY = (bh * (scale - 1)) / 2;
+        panX = Math.min(maxPanX, Math.max(-maxPanX, panX));
+        panY = Math.min(maxPanY, Math.max(-maxPanY, panY));
+      }
+
+      function applyTransform(animate){
+        clampPan();
+        img2.style.transition = animate ? 'transform 0.15s ease-out' : 'none';
+        img2.style.transformOrigin = '50% 50%';
+        img2.style.transform = 'scale(' + scale + ') translate(' + (panX/scale) + 'px,' + (panY/scale) + 'px)';
+      }
+
+      body2.addEventListener('wheel', function(ev){
+        ev.preventDefault(); ev.stopPropagation();
+        var delta = ev.deltaY > 0 ? -0.12 : 0.12;
+        scale = Math.min(maxScale, Math.max(minScale, scale + delta));
+        applyTransform(true);
+      }, {passive:false});
+
+      body2.addEventListener('mousedown', function(ev){
+        if(scale <= 1) return;
+        ev.preventDefault();
+        isDrag = true;
+        dragStartX = ev.clientX; dragStartY = ev.clientY;
+        panStartX  = panX;       panStartY  = panY;
+        body2.style.cursor = 'grabbing';
+      });
+
+      window.addEventListener('mousemove', function(ev){
+        if(!isDrag) return;
+        panX = panStartX + (ev.clientX - dragStartX);
+        panY = panStartY + (ev.clientY - dragStartY);
+        applyTransform(false);
+      });
+
+      window.addEventListener('mouseup', function(){
+        if(!isDrag) return;
+        isDrag = false;
+        body2.style.cursor = scale > 1 ? 'grab' : 'default';
+      });
+
+      body2.addEventListener('dblclick', function(){
+        scale = 1; panX = 0; panY = 0;
+        body2.style.cursor = 'default';
+        applyTransform(true);
+      });
+
+    } else {
+      win.style.width     = savedWidth + 'px';
+      win.style.left      = savedLeft  + 'px';
+      win.style.top       = savedTop   + 'px';
+      win.style.zIndex    = '';
+      win.style.maxHeight = '';
+      win.style.overflow  = '';
+      var img2 = win.querySelector('.win-body img');
+      var body2 = win.querySelector('.win-body');
+      if(img2 && body2){
+        body2.style.height = '';
+        body2.style.overflowY = '';
+        body2.style.overscrollBehavior = '';
+        img2.style.width   = '100%';
+        img2.style.height  = 'auto';
+        img2.style.objectFit = '';
+      }
+      // Re-appliquer l'adaptation verticale (largeur + scroll interne)
+      // pour les fenetres full apres retour du mode plein ecran.
+      if(win.dataset.type==='full' && typeof runFit==='function'){ runFit(); }
+    }
+  });
+  // Bouton suivant
+  win.querySelector('.win-btn-next').addEventListener('click',function(e){
+    e.stopPropagation();
+    hidePainting();
+    var nextId = (painting.id + 1) % PAINTINGS.length;
+    var nm = document.getElementById('marker-' + nextId);
+    if(nm){
+      // Calculer la position X du marqueur sur la carte et scroller vers lui
+      var markerLeft = parseInt(nm.style.left) || 0;
+      var centeredX  = markerLeft - window.innerWidth / 2;
+      targetScrollX  = Math.max(0, Math.min(getMaxScroll(), centeredX));
+      // Ouvrir la peinture une fois le scroll arrivé
+      setTimeout(function(){ showPainting(nextId, nm); }, 500);
+    }
+  });
+
+  return { el:win, line:line, updateLine:updateLine };
+}
+
+function showDetail(paintingId, idx, markerEl, hotspotEl){
+  if(detailWindows[idx]) return;
+  var p = PAINTINGS[paintingId];
+  var DWIN_W = 220, DWIN_GAP = 14;
+  var fullWinEl = windows[paintingId] && windows[paintingId][0] && windows[paintingId][0].el;
+  if(!fullWinEl) return;
+  var fr = fullWinEl.getBoundingClientRect();
+  var DWIN_W = 220, DWIN_GAP = 12;
+  var wx, wy;
+
+  // Positionner chaque détail autour de la vue complète sans l'empiéter
+  // Côté gauche disponible = fr.left, côté droit = window.innerWidth - fr.right
+  var spaceLeft  = fr.left - DWIN_GAP;
+  var spaceRight = window.innerWidth - fr.right - DWIN_GAP;
+
+  if(idx===0){
+    // Détail 1 : gauche si assez de place, sinon droite
+    if(spaceLeft >= DWIN_W){
+      wx = fr.left - DWIN_W - DWIN_GAP;
+      wy = fr.top + 50;
+    } else {
+      wx = fr.right + DWIN_GAP;
+      wy = fr.top + 50;
+    }
+  } else if(idx===1){
+    // Détail 2 : droite si assez de place, sinon gauche
+    if(spaceRight >= DWIN_W){
+      wx = fr.right + DWIN_GAP;
+      wy = fr.top + 50;
+    } else {
+      wx = fr.left - DWIN_W - DWIN_GAP;
+      wy = fr.top + 50;
+    }
+  } else {
+    // Détail 3 : droite, décalé vers le bas pour ne pas chevaucher détail 2
+    if(spaceRight >= DWIN_W){
+      wx = fr.right + DWIN_GAP;
+      wy = fr.top + 260;
+    } else {
+      wx = fr.left - DWIN_W - DWIN_GAP;
+      wy = fr.top + 260;
+    }
+  }
+  wx = Math.max(8, Math.min(window.innerWidth - DWIN_W - 8, wx));
+  wy = Math.max(60, Math.min(window.innerHeight - 260, wy));
+
+  // Cropper la zone correspondante depuis l'image de la vue complète
+  var hs = (p.hotspots && p.hotspots[idx]) || {px:0.25+idx*0.25, py:0.4, sw:0.4, sh:0.4};
+  var fullImg = fullWinEl.querySelector('img');
+  var cropSrc = p.imgFull;
+  function computeCrop(srcImg){
+    var natW = srcImg.naturalWidth, natH = srcImg.naturalHeight;
+    if(!natW || !natH) return null;
+    var cropX = Math.round(Math.max(0, (hs.px - hs.sw/2) * natW));
+    var cropY = Math.round(Math.max(0, (hs.py - hs.sh/2) * natH));
+    var cropW = Math.round(Math.min(hs.sw * natW, natW - cropX));
+    var cropH = Math.round(Math.min(hs.sh * natH, natH - cropY));
+    var cv = document.createElement('canvas');
+    cv.width = cropW; cv.height = cropH;
+    try {
+      cv.getContext('2d').drawImage(srcImg, cropX, cropY, cropW, cropH, 0, 0, cropW, cropH);
+      return cv.toDataURL('image/jpeg', 0.92);
+    } catch(e){
+      // canvas tainted (cas improbable en same-origin) : on retombe sur l'image complete
+      return null;
+    }
+  }
+  if(fullImg && fullImg.complete && fullImg.naturalWidth > 0){
+    cropSrc = computeCrop(fullImg) || p.imgFull;
+  } else if(fullImg){
+    // Image externe pas encore chargee : on recadrera au chargement.
+    fullImg.addEventListener('load', function(){
+      var c = computeCrop(fullImg);
+      if(c && detailWindows[idx] && detailWindows[idx].el){
+        var di = detailWindows[idx].el.querySelector('img');
+        if(di) di.src = c;
+      }
+    }, {once:true});
+  }
+
+  var win = document.createElement('div');
+  win.className = 'win';
+  win.style.left=wx+'px'; win.style.top=wy+'px'; win.style.width=DWIN_W+'px';
+  win.innerHTML =
+    '<div class="win-titlebar"><span class="win-title">0'+(paintingId+1)+' — Détail '+(idx+1)+'</span>'+
+    '<div class="win-btns"><div class="win-btn win-btn-expand"></div><div class="win-btn win-btn-next"></div><div class="win-btn win-btn-close"></div></div></div>'+
+    '<div class="win-body" style="height:180px;overflow:hidden;">'+
+    '<img src="'+cropSrc+'" alt="'+p.title.replace(/"/g,'')+' — détail '+(idx+1)+'" style="width:100%;height:100%;object-fit:cover;display:block;"></div>'+
+    '<div class="win-footer"><span>'+p.title+'</span><span>Détail '+(idx+1)+'</span></div>';
+  document.body.appendChild(win);
+  win.classList.add('visible');
+  win.addEventListener('wheel',function(e){ e.stopPropagation(); },{passive:true});
+
+  var hr = hotspotEl.getBoundingClientRect();
+  var line = document.createElementNS('http://www.w3.org/2000/svg','line');
+  line.setAttribute('stroke','rgba(240,236,228,0.35)');
+  line.setAttribute('stroke-width','0.7');
+  line.setAttribute('stroke-dasharray','2 5');
+  linesSvg.appendChild(line);
+  function updateLine(){
+    var wr=win.getBoundingClientRect();
+    line.setAttribute('x1',(hr.left+hr.width/2).toFixed(1));
+    line.setAttribute('y1',(hr.top+hr.height/2).toFixed(1));
+    line.setAttribute('x2',(wr.left+wr.width/2).toFixed(1));
+    line.setAttribute('y2',wr.top.toFixed(1));
+  }
+  updateLine();
+
+  win.querySelector('.win-btn-close').addEventListener('click',function(e){ e.stopPropagation(); hideDetail(idx); });
+  var isExp=false;
+  win.querySelector('.win-btn-expand').addEventListener('click',function(e){
+    e.stopPropagation(); isExp=!isExp;
+    win.style.width=(isExp?DWIN_W*1.8:DWIN_W)+'px'; win.style.zIndex=isExp?'200':'';
+  });
+  win.querySelector('.win-btn-next').addEventListener('click',function(e){
+    e.stopPropagation(); hidePainting();
+    var nextId=(paintingId+1)%PAINTINGS.length;
+    var nm=document.getElementById('marker-'+nextId);
+    if(nm) setTimeout(function(){ showPainting(nextId,nm); },600);
+  });
+
+  detailWindows[idx] = { el:win, line:line, updateLine:updateLine };
+}
+
+function hideDetail(idx){
+  if(!detailWindows[idx]) return;
+  var w=detailWindows[idx];
+  w.el.classList.remove('visible');
+  if(w.line&&w.line.parentNode) w.line.parentNode.removeChild(w.line);
+  setTimeout(function(){ if(w.el.parentNode) w.el.parentNode.removeChild(w.el); },280);
+  delete detailWindows[idx];
+}
+
+function showPainting(paintingId, markerEl){
+  if(activeMarker===paintingId) return;
+  hidePainting();
+  activeMarker=paintingId;
+  var p=PAINTINGS[paintingId];
+  windows[paintingId]=[];
+  windows[paintingId].push(createWindow(p,markerEl,'full',-200,-340,p.imgFull,'0'+(paintingId+1)+' — Vue complète'));
+  document.getElementById('hud-title').textContent=p.title;
+  document.getElementById('hud-title').classList.add('visible');
+
+  setTimeout(function(){
+    var fullWinEl=windows[paintingId]&&windows[paintingId][0]&&windows[paintingId][0].el;
+    if(!fullWinEl) return;
+    var fr=fullWinEl.getBoundingClientRect();
+    var titlebarH=28, footerH=26, descH=90;
+    var imgTop=fr.top+titlebarH;
+    var imgHeight=fr.height-titlebarH-footerH-descH;
+    var imgLeft=fr.left, imgWidth=fr.width;
+
+    // Utiliser les hotspots personnalisés de la peinture
+    var paintingHotspots = p.hotspots || [
+      {px:.2, py:.35,sw:.4,sh:.45},
+      {px:.65,py:.25,sw:.4,sh:.4},
+      {px:.45,py:.7,sw:.5,sh:.4},
+    ];
+
+    paintingHotspots.forEach(function(phs,hi){
+      if(hi>=3) return;
+      // Taille de la hitbox : proportionnelle à la zone de crop, minimum 90px
+      var hsW = Math.max(90, Math.min(160, Math.floor(phs.sw * imgWidth)));
+      var hsH = Math.max(70, Math.min(140, Math.floor(phs.sh * imgHeight)));
+      var hx = imgLeft + phs.px * imgWidth  - hsW/2;
+      var hy = imgTop  + phs.py * imgHeight - hsH/2;
+      hx = Math.max(imgLeft, Math.min(imgLeft + imgWidth  - hsW, hx));
+      hy = Math.max(imgTop,  Math.min(imgTop  + imgHeight - hsH, hy));
+
+      var hel=document.createElement('div');
+      hel.className='hotspot'; hel.dataset.idx=hi;
+      hel.style.cssText='position:fixed;left:'+hx+'px;top:'+hy+'px;width:'+hsW+'px;height:'+hsH+'px;z-index:150;cursor:none;';
+      hel.innerHTML='<div class="hotspot-inner"><div class="hs-label">Zone '+(hi+1)+'</div></div>';
+      document.body.appendChild(hel);
+      hotspotEls.push(hel);
+      hel.addEventListener('mouseenter',function(){ showDetail(paintingId,hi,markerEl,hel); });
+      hel.addEventListener('mouseleave',function(){ hideDetail(hi); });
+    });
+  },80);
+}
+
+function hidePainting(){
+  if(activeMarker===null) return;
+  Object.keys(detailWindows).forEach(function(k){ hideDetail(parseInt(k)); });
+  hotspotEls.forEach(function(h){ if(h.parentNode) h.parentNode.removeChild(h); });
+  hotspotEls=[];
+  if(windows[activeMarker]){
+    windows[activeMarker].forEach(function(w){
+      w.el.classList.remove('visible');
+      if(w.line&&w.line.parentNode) w.line.parentNode.removeChild(w.line);
+      setTimeout(function(){ if(w.el.parentNode) w.el.parentNode.removeChild(w.el); },280);
+    });
+    delete windows[activeMarker];
+  }
+  activeMarker=null;
+  document.getElementById('hud-title').classList.remove('visible');
+  document.getElementById('hud-coords').textContent='48°N 1°W — ALT: 0m';
+}
+
+// Events marqueurs
+document.querySelectorAll('.marker').forEach(function(m){
+  var id=parseInt(m.dataset.id);
+  m.addEventListener('mouseenter',function(){
+    ring.classList.add('hov');
+    showPainting(id,m);
+    document.getElementById('scroll-hint').classList.add('hidden');
+  });
+});
+document.getElementById('scene').addEventListener('click',function(e){
+  if(!e.target.closest('.marker')&&!e.target.closest('.win')) hidePainting();
+});
+document.querySelectorAll('a').forEach(function(a){
+  a.addEventListener('mouseenter',function(){ ring.classList.add('hov'); });
+  a.addEventListener('mouseleave',function(){ ring.classList.remove('hov'); });
+});
+
+// ── Boucle principale ─────────────────────────────────────
+(function mainLoop(){
+  requestAnimationFrame(mainLoop);
+  scrollX += (targetScrollX - scrollX) * 0.08;
+  track.style.transform = 'translateX('+(-scrollX)+'px)';
+  drawTopo(scrollX);
+  if(activeMarker!==null){
+    if(windows[activeMarker]) windows[activeMarker].forEach(function(w){ w.updateLine(); });
+    Object.keys(detailWindows).forEach(function(k){ if(detailWindows[k]) detailWindows[k].updateLine(); });
+  }
+  var pct=maxScroll>0?scrollX/maxScroll:0;
+  document.getElementById('hud-coords').textContent=(48+pct*2).toFixed(4)+'°N — '+(1+pct*8).toFixed(4)+'°E — ALT: '+Math.round(pct*500)+'m';
+  if(scrollX>50) document.getElementById('scroll-hint').classList.add('hidden');
+  maxScroll=getMaxScroll();
+})();
+</script>
+
+
+<script src="apercu-loader.js"></script>
+</body>
+</html>
